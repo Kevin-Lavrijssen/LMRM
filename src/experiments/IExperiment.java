@@ -1,5 +1,7 @@
 package experiments;
 
+import java.io.IOException;
+
 /**
  * An experiment sets up a whole system of environments, agents and reward models and controls its execition via run().
  * 
@@ -9,6 +11,6 @@ package experiments;
 
 public interface IExperiment {
 
-	public void run();
+	public void run() throws IOException;
 	
 }

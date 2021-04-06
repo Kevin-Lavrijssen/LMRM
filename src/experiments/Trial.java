@@ -1,4 +1,5 @@
 package experiments;
+import java.io.IOException;
 import java.util.ArrayList;
 import agents.Agent;
 import agents.Log;
@@ -35,7 +36,7 @@ public class Trial implements IExperiment{
 	}
 	
 	@Override
-	public void run() {
+	public void run() throws IOException {
 		
 		// Gather initial data by one of the agents TODO
 		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(10, 10);

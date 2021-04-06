@@ -66,6 +66,7 @@ public class LMRM implements IRewardMachine{
 		
 		// Else create a new transition
 		table.addEntry(new LogicalTableEntry(pushedSource, pushedObservation, pushedDestination, pushedReward));
+		clearTemporaryTransition();
 	}
 
 	@Override
@@ -76,8 +77,14 @@ public class LMRM implements IRewardMachine{
 		// Create transition to new state
 		ITableEntry entry = new LogicalTableEntry(source, o, nStates-1, reward);
 		table.addEntry(entry);
+		clearTemporaryTransition();
 	}
 
-	
+	private void clearTemporaryTransition() {
+		this.pushedSource = -1;
+		this.pushedObservation = null;
+		this.pushedDestination = -1;
+		this.pushedReward = -1;		
+	}
 	
 }

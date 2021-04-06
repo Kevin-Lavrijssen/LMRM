@@ -106,6 +106,7 @@ public class MRM implements IRewardMachine{
 	public void commitTransition() {
 		ITableEntry entry = new StandardTableEntry(pushedSource, pushedObservation, pushedDestination, pushedReward);
 		table.addEntry(entry);
+		clearTemporaryTransition();
 	}
 
 	@Override
@@ -116,6 +117,14 @@ public class MRM implements IRewardMachine{
 		// Create transition to new state
 		ITableEntry entry = new StandardTableEntry(source, o, nStates-1, reward);
 		table.addEntry(entry);
+		clearTemporaryTransition();
+	}
+	
+	private void clearTemporaryTransition() {
+		this.pushedSource = -1;
+		this.pushedObservation = null;
+		this.pushedDestination = -1;
+		this.pushedReward = -1;		
 	}
 	
 }
