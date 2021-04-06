@@ -4,12 +4,20 @@ import rewardmachines.Observation;
 
 public class Log {
 
-	Observation o;
-	int r;
+	private Observation o;
+	private int r;
 	
 	public Log(Observation o, int r) {
 		this.o=o;
 		this.r=r;
+	}
+	
+	public Observation getObservation() {
+		return o;
+	}
+	
+	public int getReward() {
+		return r;
 	}
 	
 }

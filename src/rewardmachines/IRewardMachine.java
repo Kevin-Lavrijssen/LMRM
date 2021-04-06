@@ -13,5 +13,11 @@ public interface IRewardMachine {
 	public void commitTransition();
 	
 	public void addStateTransition(int source, Observation o, int reward);
+
+	public void setState(int currentState);
+
+	public int getCurrentState();
+
+	public int getNumberOfStates();
 	
 }

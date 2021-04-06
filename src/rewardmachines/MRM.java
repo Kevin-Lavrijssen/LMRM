@@ -126,5 +126,15 @@ public class MRM implements IRewardMachine{
 		this.pushedDestination = -1;
 		this.pushedReward = -1;		
 	}
+
+	@Override
+	public void setState(int currentState) {
+		this.currentState=currentState;
+	}
+
+	@Override
+	public int getCurrentState() {
+		return currentState;
+	}
 	
 }

@@ -13,13 +13,14 @@ public class Agent {
 	int nPropositions;
 	boolean automatonConstructed;
 	
-	ArrayList<ArrayList<Log>> trainingSet;
+	DataSession trainingSet;
 	
 	public Agent(IRewardMachine emptyModel, Environment e, int nPropositions) {
 		this.taskModel=emptyModel;
 		this.e = e;
 		this.nPropositions = nPropositions;
 		this.automatonConstructed = false;
+		trainingSet = new DataSession();
 	}
 	
 	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps) throws IOException {
@@ -68,14 +69,56 @@ public class Agent {
 		// TODO Second phase
 	}
 	
-	private void expandAutomaton(ArrayList<ArrayList<Log>> trainingData) {
+	private void expandAutomaton() throws IOException {
+		
+		// See if model explains the data
+		if(trainingSet.explained()) {return;}
+		
+		// Get next unexplained
+		Unexplained unexplained = trainingSet.getNextUnexplained();
+		
+		// Try to extend 
+		for (int state = 0; state<taskModel.getNumberOfStates(); state++) {
+			
+			// Push new transition
+			taskModel.pushTransition(unexplained.getState(), unexplained.getObservation(), state, unexplained.getReward());
+			
+			// Check consistency with data
+			if(trainingSet.consistent(taskModel)) {
+				
+				// Commit changes 
+				taskModel.commitTransition();
+				
+				// Explain data
+				trainingSet.explain(taskModel);
+				
+				// Recursive call
+				expandAutomaton();
+				return;
+				
+			}
+		
+		// Create new state
+		taskModel.addStateTransition(unexplained.getState(), unexplained.getObservation(), unexplained.getReward());
+		
+		// Recursive call
+		expandAutomaton();
+		return;
+			
+		}
 		
 	}
 
-	public void constructAutomaton(ArrayList<ArrayList<Log>> trainingData) {
+	public void constructAutomaton(ArrayList<ArrayList<Log>> trainingData) throws IOException {
 		if(this.automatonConstructed) {throw new IllegalArgumentException("Automaton already built");}
-		expandAutomaton(trainingData);		
+		trainingSet.add(trainingData);
+		trainingSet.reset();
+		expandAutomaton();		
 		this.automatonConstructed=true;
+	}
+	
+	public void addData(ArrayList<ArrayList<Log>> data) {
+		trainingSet.add(data);
 	}
 	
 }

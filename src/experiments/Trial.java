@@ -38,12 +38,13 @@ public class Trial implements IExperiment{
 	@Override
 	public void run() throws IOException {
 		
-		// Gather initial data by one of the agents TODO
+		// Gather initial data by one of the agents
 		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(10, 10);
 		
-		// Build the reward machines TODO
+		// Build the reward machines
 		standardAgent.constructAutomaton(trainingData);
 		logicalAgent.constructAutomaton(trainingData);
+		
 		
 	}
 
