@@ -23,6 +23,8 @@ public class Agent {
 		trainingSet = new DataSession();
 	}
 	
+	// Debugged -> OK!
+	
 	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps) throws IOException {
 		
 		ArrayList<ArrayList<Log>> batch = new ArrayList<ArrayList<Log>>();
@@ -71,11 +73,19 @@ public class Agent {
 	
 	private void expandAutomaton() throws IOException {
 		
+		System.out.println("###############################  Current Model ###############################");
+		System.out.println(taskModel.toString());
+		System.out.println("##############################################################################");
+		
 		// See if model explains the data
 		if(trainingSet.explained()) {return;}
 		
 		// Get next unexplained
 		Unexplained unexplained = trainingSet.getNextUnexplained();
+		
+		System.out.println("Source: "+unexplained.getState());
+		System.out.println("Observation: "+unexplained.getObservation().toString());
+		System.out.println("Reward: "+unexplained.getReward());
 		
 		// Try to extend 
 		for (int state = 0; state<taskModel.getNumberOfStates(); state++) {
@@ -97,20 +107,22 @@ public class Agent {
 				return;
 				
 			}
+		}
 		
 		// Create new state
 		taskModel.addStateTransition(unexplained.getState(), unexplained.getObservation(), unexplained.getReward());
+		trainingSet.explain(taskModel);
 		
 		// Recursive call
 		expandAutomaton();
 		return;
-			
-		}
 		
 	}
 
 	public void constructAutomaton(ArrayList<ArrayList<Log>> trainingData) throws IOException {
 		if(this.automatonConstructed) {throw new IllegalArgumentException("Automaton already built");}
+		System.out.println(trainingSet.toString());
+		System.out.println("Construction started");
 		trainingSet.add(trainingData);
 		trainingSet.reset();
 		expandAutomaton();		

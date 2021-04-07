@@ -20,4 +20,8 @@ public class Log {
 		return r;
 	}
 	
+	public String toString() {
+		return "(o:"+o.toString()+",(r:"+r+")";
+	}
+	
 }

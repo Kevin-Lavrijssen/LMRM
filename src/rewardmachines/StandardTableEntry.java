@@ -50,7 +50,7 @@ public class StandardTableEntry implements ITableEntry{
 	}
 	
 	public String toString() {
-		return source + ", " +observation.toString() + ", " + destination + ", " + reward +"\n";
+		return source + "," +observation.toString() + "," + destination + "," + reward +"\n";
 	}
 	
 }

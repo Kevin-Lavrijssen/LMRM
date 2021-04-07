@@ -28,7 +28,7 @@ public class Trace {
 
 	public void explain(IRewardMachine rm) {
 		
-		if(index==-1) {return;}
+		if(index==-1 && currentState==-1) {return;}
 		
 		rm.setState(currentState);
 		for (int i=index; i<trace.size(); i++) {
@@ -49,9 +49,13 @@ public class Trace {
 	}
 
 	public boolean consistent(IRewardMachine rm) {
+		// If the trace has been explained it is consistent with the rm
+		if (index==-1 && currentState==-1) {return true;}
+		
+		// Else try to explain the remainder
+		rm.setState(currentState);
 		for (int i=index; i<trace.size(); i++) {
 			Log l = trace.get(i);
-			
 			try {
 				int reward = rm.execute(l.getObservation());
 				if(reward!=l.getReward()) {return false;}
@@ -67,6 +71,15 @@ public class Trace {
 		return new Unexplained(currentState, trace.get(index));
 	}
 	
+	public String toString() {
+		String traceString = "";
+		for (Log l:trace) {
+			traceString+=l.toString();
+			traceString+=",";
+		}
+		traceString+="\n";
+		return traceString;
+	}
 	
 	
 }

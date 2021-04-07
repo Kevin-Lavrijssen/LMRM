@@ -51,7 +51,7 @@ public class LogicalTableEntry implements ITableEntry {
 	}
 
 	public String toString() {
-		return source + ", " +constraint.toString() + ", " + destination + ", " + reward +"\n";
+		return source + "," +constraint.toString() + "," + destination + "," + reward +"\n";
 	}
 	
 }

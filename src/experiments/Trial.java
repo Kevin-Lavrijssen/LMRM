@@ -14,14 +14,14 @@ public class Trial implements IExperiment{
 	Agent logicalAgent;
 	Agent standardAgent;
 	
-	public Trial() {
+	public Trial() throws IOException {
 		
-		int nPropositions = 5;
-		int nStates = 10;
-		int maxReward  = 2;
+		int nPropositions = 2;
 		
 		// Set up environment
-		IRewardMachine task = new MRM(nStates, nPropositions, maxReward);
+		String fileLocation = "C:\\Users\\Kevin\\eclipse-workspace\\LogicalMealyRewardMachines\\firstMM.csv";
+		MRM task = new MRM(fileLocation);
+		// System.out.println(test.toString());
 		e = new Environment(task);
 		
 		
@@ -39,7 +39,7 @@ public class Trial implements IExperiment{
 	public void run() throws IOException {
 		
 		// Gather initial data by one of the agents
-		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(10, 10);
+		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(1000, 1000);
 		
 		// Build the reward machines
 		standardAgent.constructAutomaton(trainingData);

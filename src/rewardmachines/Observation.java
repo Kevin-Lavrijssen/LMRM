@@ -22,6 +22,19 @@ public class Observation {
 		
 	}
 	
+	public Observation(String o) {
+		observation = o;
+		integerValue = toInt(o);
+	}
+
+	private int toInt(String o) {
+		int val = 0;
+		for (int i = o.length()-1; i>=0; i--) {
+			val+=Math.pow(2, o.length()-i-1)*o.charAt(i);
+		}
+		return val;
+	}
+
 	public String toString() {
 		return observation;
 	}

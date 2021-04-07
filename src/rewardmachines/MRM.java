@@ -1,5 +1,10 @@
 package rewardmachines;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class MRM implements IRewardMachine{
@@ -42,6 +47,27 @@ public class MRM implements IRewardMachine{
 		this.nStates=nStates;
 		this.currentState=0;
 		
+	}
+	
+	public MRM(String fileLocation) throws IOException {
+		this.table = new TransitionRewardTable();
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(fileLocation))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		        
+		    	System.out.println(line);
+		    	String[] values = line.split(",");
+		        
+		        int source = Integer.parseInt(values[0]);
+		        Observation observation = new Observation(values[1]);
+		        int destination = Integer.parseInt(values[2]);
+		        int reward = Integer.parseInt(values[3]);
+		        
+		        StandardTableEntry e = new StandardTableEntry(source, observation, destination, reward);
+		        table.addEntry(e);
+		    }
+		}
 	}
 
 	/**
@@ -104,6 +130,7 @@ public class MRM implements IRewardMachine{
 
 	@Override
 	public void commitTransition() {
+		System.out.println("Transition Committed");
 		ITableEntry entry = new StandardTableEntry(pushedSource, pushedObservation, pushedDestination, pushedReward);
 		table.addEntry(entry);
 		clearTemporaryTransition();
@@ -111,6 +138,7 @@ public class MRM implements IRewardMachine{
 
 	@Override
 	public void addStateTransition(int source, Observation o, int reward) {
+		System.out.println("New state constructed");
 		// Create new state
 		this.nStates += 1;
 		

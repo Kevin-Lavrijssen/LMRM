@@ -61,4 +61,12 @@ public class DataSession {
 		throw new IOException("The traces were already explained, cannot retrieve unexplained.");
 	}
 	
+	public String toString() {
+		String string = "";
+		for(Trace t:data) {
+			string+=t.toString();
+		}
+		return string;
+	}
+	
 }
