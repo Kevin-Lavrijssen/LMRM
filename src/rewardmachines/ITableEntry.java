@@ -21,4 +21,6 @@ interface ITableEntry {
 	 */
 	void setDestination(int destination);
 	
+	public String toString();
+	
 }

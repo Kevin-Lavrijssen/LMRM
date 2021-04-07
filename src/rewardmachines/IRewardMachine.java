@@ -20,4 +20,5 @@ public interface IRewardMachine {
 
 	public int getNumberOfStates();
 	
+	public String toString();
 }

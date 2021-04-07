@@ -70,4 +70,12 @@ class TransitionRewardTable {
 		}		
 	}
 	
+	public String toString() {
+		String me = "";
+		for (ITableEntry e:table) {
+			me+=e.toString();
+		}
+		return me;
+	}
+	
 }

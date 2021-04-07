@@ -53,7 +53,7 @@ public class MRM implements IRewardMachine{
 	@Override
 	public int execute(Observation observation) throws IOException {
 		
-		if(this.pushedSource == this.currentState  && this.pushedObservation.equals(observation)) {
+		if(this.pushedSource == this.currentState  && this.pushedObservation!=null && this.pushedObservation.equals(observation)) {
 			this.currentState = this.pushedDestination;
 			return this.pushedReward;
 		}
@@ -89,10 +89,10 @@ public class MRM implements IRewardMachine{
 	 * Set of temporary variables to track a transient transition
 	 */
 	
-	int pushedSource;
-	Observation pushedObservation;
-	int pushedDestination;
-	int pushedReward;
+	int pushedSource = -1;
+	Observation pushedObservation = null;
+	int pushedDestination = -1;
+	int pushedReward = -1;
 	
 	@Override
 	public void pushTransition(int source, Observation o, int destination, int reward) {
@@ -135,6 +135,11 @@ public class MRM implements IRewardMachine{
 	@Override
 	public int getCurrentState() {
 		return currentState;
+	}
+	
+	@Override 
+	public String toString() {
+		return table.toString();
 	}
 	
 }

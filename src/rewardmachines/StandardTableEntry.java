@@ -49,4 +49,8 @@ public class StandardTableEntry implements ITableEntry{
 		this.destination = destination;
 	}
 	
+	public String toString() {
+		return source + ", " +observation.toString() + ", " + destination + ", " + reward +"\n";
+	}
+	
 }
