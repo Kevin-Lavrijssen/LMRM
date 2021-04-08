@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import agents.Agent;
 import agents.Log;
 import environments.Environment;
-import rewardmachines.IRewardMachine;
+import rewardmachines.RewardMachine;
 import rewardmachines.LMRM;
 import rewardmachines.MRM;
 
@@ -26,11 +26,11 @@ public class Trial implements IExperiment{
 		
 		
 		// Set up logicalAgent
-		IRewardMachine emptyLMRM = new LMRM();
+		RewardMachine emptyLMRM = new LMRM();
 		logicalAgent = new Agent(emptyLMRM, e, nPropositions);
 		
 		// Set up standardAgent
-		IRewardMachine emptyMRM = new MRM();
+		RewardMachine emptyMRM = new MRM();
 		standardAgent = new Agent(emptyMRM, e, nPropositions);
 		
 	}
@@ -39,11 +39,11 @@ public class Trial implements IExperiment{
 	public void run() throws IOException {
 		
 		// Gather initial data by one of the agents
-		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(1000, 1000);
+		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(10, 100);
 		
 		// Build the reward machines
 		standardAgent.constructAutomaton(trainingData);
-		logicalAgent.constructAutomaton(trainingData);
+		// logicalAgent.constructAutomaton(trainingData);
 		
 		
 	}

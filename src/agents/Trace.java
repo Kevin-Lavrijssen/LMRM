@@ -3,7 +3,7 @@ package agents;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import rewardmachines.IRewardMachine;
+import rewardmachines.RewardMachine;
 
 public class Trace {
 
@@ -26,7 +26,7 @@ public class Trace {
 		return currentState==-1 && index==-1;
 	}
 
-	public void explain(IRewardMachine rm) {
+	public void explain(RewardMachine rm) {
 		
 		if(index==-1 && currentState==-1) {return;}
 		
@@ -40,15 +40,18 @@ public class Trace {
 			} catch (IOException e) {
 				currentState = rm.getCurrentState();
 				index = i;
+				rm.reset();
 				return;
 			}
-			
-			currentState=-1;
-			index=-1;
 		}
+		
+		currentState=-1;
+		index=-1;
+		rm.reset();
+		
 	}
 
-	public boolean consistent(IRewardMachine rm) {
+	public boolean consistent(RewardMachine rm) {
 		// If the trace has been explained it is consistent with the rm
 		if (index==-1 && currentState==-1) {return true;}
 		
@@ -72,13 +75,13 @@ public class Trace {
 	}
 	
 	public String toString() {
-		String traceString = "";
-		for (Log l:trace) {
-			traceString+=l.toString();
-			traceString+=",";
+		if(index==-1) {return "Done \n";}
+		String string = "[Current State : "+currentState+"]";
+		for (int i=index; i<trace.size(); i++) {
+			string+=trace.get(i).toString()+"|";
 		}
-		traceString+="\n";
-		return traceString;
+		return string+"\n";
+		
 	}
 	
 	

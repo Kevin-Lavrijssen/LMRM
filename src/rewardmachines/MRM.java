@@ -7,21 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class MRM implements IRewardMachine{
-
-	/**
-	 * ###############################################################################################################################
-	 * #############################   Part of the class that specifies a full automaton  ############################################
-	 * ###############################################################################################################################
-	 */
+public class MRM extends RewardMachine{
 	
-	// TODO: Might not be necessary: private int nPropositions;
-	
-	private int nStates;
-	
-	private int currentState;
-	
-	private TransitionRewardTable table;
 	
 	public MRM(int nStates, int nPropositions, int maxReward) {
 		// Create the new transition table
@@ -69,64 +56,14 @@ public class MRM implements IRewardMachine{
 		    }
 		}
 	}
-
-	/**
-	 * This method executes a given observation on the machine. 
-	 * => Current state is updated
-	 * => Reward is emitted
-	 */
-	
-	@Override
-	public int execute(Observation observation) throws IOException {
-		
-		if(this.pushedSource == this.currentState  && this.pushedObservation!=null && this.pushedObservation.equals(observation)) {
-			this.currentState = this.pushedDestination;
-			return this.pushedReward;
-		}
-		
-		ITableEntry entry = table.get(currentState, observation);
-		this.currentState = entry.getDestination();
-		return entry.getReward();
-	}
-
-	@Override
-	public void reset() {
-		currentState = 0;		
-	}
-	
-	/**
-	 * ###############################################################################################################################
-	 * ##################################   Part of the class aimed at learning automata  ############################################
-	 * ###############################################################################################################################
-	 */
 	
 	public MRM() {
-		nStates = 1;
-		currentState = 0;
-		// this.nPropositions = nPropositions;
-		table = new TransitionRewardTable();
+		super();
 	}
 	
-	public int getNumberOfStates() {
-		return this.nStates;
-	}
-
-	/** 
-	 * Set of temporary variables to track a transient transition
+	/**
+	 * {@inheritDoc}
 	 */
-	
-	int pushedSource = -1;
-	Observation pushedObservation = null;
-	int pushedDestination = -1;
-	int pushedReward = -1;
-	
-	@Override
-	public void pushTransition(int source, Observation o, int destination, int reward) {
-		this.pushedSource = source;
-		this.pushedObservation = o;
-		this.pushedDestination = destination;
-		this.pushedReward = reward;
-	}
 
 	@Override
 	public void commitTransition() {
@@ -135,6 +72,10 @@ public class MRM implements IRewardMachine{
 		table.addEntry(entry);
 		clearTemporaryTransition();
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 
 	@Override
 	public void addStateTransition(int source, Observation o, int reward) {
@@ -146,28 +87,6 @@ public class MRM implements IRewardMachine{
 		ITableEntry entry = new StandardTableEntry(source, o, nStates-1, reward);
 		table.addEntry(entry);
 		clearTemporaryTransition();
-	}
-	
-	private void clearTemporaryTransition() {
-		this.pushedSource = -1;
-		this.pushedObservation = null;
-		this.pushedDestination = -1;
-		this.pushedReward = -1;		
-	}
-
-	@Override
-	public void setState(int currentState) {
-		this.currentState=currentState;
-	}
-
-	@Override
-	public int getCurrentState() {
-		return currentState;
-	}
-	
-	@Override 
-	public String toString() {
-		return table.toString();
 	}
 	
 }

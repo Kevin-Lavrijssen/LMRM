@@ -1,14 +1,14 @@
 package environments;
 import java.io.IOException;
 
-import rewardmachines.IRewardMachine;
+import rewardmachines.RewardMachine;
 import rewardmachines.Observation;
 
 public class Environment {
 
-	IRewardMachine task;
+	RewardMachine task;
 	
-	public Environment(IRewardMachine task) {
+	public Environment(RewardMachine task) {
 		this.task=task;
 	}
 	

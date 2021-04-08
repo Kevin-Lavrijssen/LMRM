@@ -11,6 +11,9 @@ public class Main {
 		Trial exp = new Trial();
 		exp.run();
 		 
+		//HighLevelTests t = new HighLevelTests();
+		//t.run();
+		
 	 }
 	
 }

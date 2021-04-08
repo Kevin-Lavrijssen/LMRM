@@ -3,7 +3,7 @@ package agents;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import rewardmachines.IRewardMachine;
+import rewardmachines.RewardMachine;
 
 public class DataSession {
 	
@@ -34,17 +34,21 @@ public class DataSession {
 		}
 	}
 	
-	public boolean consistent(IRewardMachine rm) {
+	public boolean consistent(RewardMachine rm) {
+		rm.reset();
 		for (Trace trace:data) {
 			if(!trace.consistent(rm)) {return false;}
 		}
+		rm.reset();
 		return true;
 	}
 	
-	public void explain(IRewardMachine rm) {
+	public void explain(RewardMachine rm) {
+		rm.reset();
 		for (Trace trace:data) {
 			trace.explain(rm);
 		}
+		rm.reset();
 	}
 	
 	public boolean explained() {
