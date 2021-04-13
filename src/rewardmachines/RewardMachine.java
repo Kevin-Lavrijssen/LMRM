@@ -1,6 +1,8 @@
 package rewardmachines;
 import java.io.IOException;
 
+import exceptions.BehaviourUndefinedException;
+
 public abstract class RewardMachine {
 
 
@@ -137,11 +139,11 @@ public abstract class RewardMachine {
 	 * 
 	 * @param observation	| The observation to execute on the machine.
 	 * @return				| The reward resulting from taking the transition.
-	 * @throws IOException 	| Exception thrown when the behavior for the current state and the provided
-	 * 						| input is undefined.
+	 * @throws BehaviourUndefinedException 	| Exception thrown when the behavior for the current state and the provided
+	 * 										| input is undefined.
 	 */
 	
-	public int execute(Observation observation) throws IOException {
+	public int execute(Observation observation) throws BehaviourUndefinedException {
 		
 		if(this.pushedSource == this.currentState  && this.pushedObservation!=null && this.pushedObservation.equals(observation)) {
 			this.currentState = this.pushedDestination;
@@ -151,6 +153,17 @@ public abstract class RewardMachine {
 		ITableEntry entry = table.get(currentState, observation);
 		this.currentState = entry.getDestination();
 		return entry.getReward();
+	}
+	
+	public boolean isDefined(Observation observation) {
+		if(this.pushedSource == this.currentState  && this.pushedObservation!=null && this.pushedObservation.equals(observation)) {
+			return true;
+		}
+		
+		try {
+		ITableEntry entry = table.get(currentState, observation);
+		return true;
+		} catch (BehaviourUndefinedException e) {return false;}
 	}
 
 	/**

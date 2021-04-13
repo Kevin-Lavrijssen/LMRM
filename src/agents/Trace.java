@@ -1,23 +1,50 @@
 package agents;
-
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import exceptions.BehaviourUndefinedException;
+import exceptions.PreconditionViolatedException;
 import rewardmachines.RewardMachine;
 
 public class Trace {
 
 	private ArrayList<Log> trace;
+	
+	public int[] getRemainder(RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException{
+		
+		rm.setState(currentState);
+		int remainderState = currentState;
+		int remainderIndex = index;
+		
+		while(remainderIndex<trace.size()) {
+			Log log = trace.get(remainderIndex);
+			if(!rm.isDefined(log.getObservation())) {return new int[] {remainderState, remainderIndex};}
+			if(log.getReward()!=rm.execute(log.getObservation())) {
+				throw new PreconditionViolatedException("Automaton inconsistent with the trace");}
+			remainderState=rm.getCurrentState();
+			remainderIndex+=1;
+		}
+		
+		return new int[] {-1,-1};
+		
+	}
+	
+	public ArrayList<Log> getTrace(){
+		return trace;
+	}
+	
 	private int currentState;
+	
+	public int getCurrentState() {
+		return currentState;
+	}
+	
 	private int index;
+	
+	
 	
 	public Trace(ArrayList<Log> trace) {
 		this.trace=trace;
-		currentState=0;
-		index=0;
-	}
-
-	public void reset() {
 		currentState=0;
 		index=0;
 	}
@@ -26,63 +53,66 @@ public class Trace {
 		return currentState==-1 && index==-1;
 	}
 
-	public void explain(RewardMachine rm) {
-		
-		if(index==-1 && currentState==-1) {return;}
-		
-		rm.setState(currentState);
-		for (int i=index; i<trace.size(); i++) {
-			Log l = trace.get(i);
-			
-			try {
-				int reward = rm.execute(l.getObservation());
-				if(reward!=l.getReward()) {throw new IOException("Check consistency before explaining data!");}
-			} catch (IOException e) {
-				currentState = rm.getCurrentState();
-				index = i;
-				rm.reset();
-				return;
-			}
-		}
-		
-		currentState=-1;
-		index=-1;
-		rm.reset();
-		
-	}
-
-	public boolean consistent(RewardMachine rm) {
-		// If the trace has been explained it is consistent with the rm
-		if (index==-1 && currentState==-1) {return true;}
-		
-		// Else try to explain the remainder
-		rm.setState(currentState);
-		for (int i=index; i<trace.size(); i++) {
-			Log l = trace.get(i);
-			try {
-				int reward = rm.execute(l.getObservation());
-				if(reward!=l.getReward()) {return false;}
-			} catch (IOException e) {
-				return true;
-			}
-		}
-		return true;
-	}
-
-	public Unexplained getNextUnexplained() throws IOException {
-		if(index==-1) {throw new IOException("The traces was already explained, cannot retrieve unexplained.");}
+	public Unexplained getNextUnexplained() {
 		return new Unexplained(currentState, trace.get(index));
 	}
-	
-	public String toString() {
-		if(index==-1) {return "Done \n";}
-		String string = "[Current State : "+currentState+"]";
-		for (int i=index; i<trace.size(); i++) {
-			string+=trace.get(i).toString()+"|";
+
+	public void explain(RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException {
+		if (currentState==-1 && index==-1) {throw new PreconditionViolatedException("Cannot further explain a trace that has already been explained");}
+		
+		rm.setState(currentState);
+		int newIndex = index;
+		int newState = currentState;
+		for(int i=index; i<trace.size();i++) {
+			
+			Log log = trace.get(i);
+			if(rm.isDefined(log.getObservation())) {rm.execute(log.getObservation()); newState = rm.getCurrentState(); newIndex=i+1;}
+			else {index=newIndex; currentState=newState; return;}
 		}
-		return string+"\n";
+		
+		rm.reset();
+		currentState=-1;
+		index=-1;
 		
 	}
+
+	public void reset() {
+		index=0;
+		currentState=0;
+	}
 	
+	public String toString(int remainderState, int remainderIndex){
+		String string="Current state = "+currentState+" Remainder state = "+remainderState+" Index = "+index+" Remainder Index = "+remainderIndex+"\n"+"Remainder = ";
+		
+		for (int i=remainderIndex; i<trace.size(); i++) {
+			string+=trace.get(i).toString();
+		}
+		
+		return string+="\n";
+	}
+	
+	public String toString(){
+		String string="Full trace = ";
+		
+		for (int i=0; i<trace.size(); i++) {
+			string+=trace.get(i).toString();
+		}
+		
+		return string+="\n";
+	}
+
+	public boolean isConsistent(RewardMachine rm) throws BehaviourUndefinedException {
+		
+		rm.setState(currentState);
+		int i=index;
+		while(i<trace.size()) {
+			Log log = trace.get(i);
+			if(!rm.isDefined(log.getObservation())) {return true;}
+			if(log.getReward()!=rm.execute(log.getObservation())) {return false;}
+			i+=1;
+		}
+		
+		return true;
+	}
 	
 }

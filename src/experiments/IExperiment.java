@@ -2,6 +2,9 @@ package experiments;
 
 import java.io.IOException;
 
+import exceptions.BehaviourUndefinedException;
+import exceptions.PreconditionViolatedException;
+
 /**
  * An experiment sets up a whole system of environments, agents and reward models and controls its execition via run().
  * 
@@ -11,6 +14,6 @@ import java.io.IOException;
 
 public interface IExperiment {
 
-	public void run() throws IOException;
+	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException;
 	
 }

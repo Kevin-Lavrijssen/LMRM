@@ -7,6 +7,8 @@ import agents.Agent;
 import agents.DataSession;
 import agents.Log;
 import environments.Environment;
+import exceptions.BehaviourUndefinedException;
+import exceptions.PreconditionViolatedException;
 import rewardmachines.MRM;
 import rewardmachines.RewardMachine;
 
@@ -32,7 +34,7 @@ public class HighLevelTests implements IExperiment{
 		standardAgent = new Agent(emptyMRM, e, nPropositions);
 	}
 	
-	public void run() throws IOException {
+	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
 		
 		// Gather initial data by one of the agents
 		ArrayList<ArrayList<Log>> trainingData1 = standardAgent.explore(1000, 1000);
@@ -78,7 +80,7 @@ public class HighLevelTests implements IExperiment{
 		
 	}
 	
-	public void verifyTrainingData(Environment e, ArrayList<ArrayList<Log>> trainingData) throws IOException {
+	public void verifyTrainingData(Environment e, ArrayList<ArrayList<Log>> trainingData) throws IOException, BehaviourUndefinedException {
 		for (ArrayList<Log> trace:trainingData) {
 			e.reset();
 			for(Log l:trace) {

@@ -1,6 +1,6 @@
 package environments;
-import java.io.IOException;
 
+import exceptions.BehaviourUndefinedException;
 import rewardmachines.RewardMachine;
 import rewardmachines.Observation;
 
@@ -12,7 +12,7 @@ public class Environment {
 		this.task=task;
 	}
 	
-	public int execute(Observation o) throws IOException {
+	public int execute(Observation o) throws BehaviourUndefinedException {
 		return task.execute(o);
 	}
 	

@@ -21,7 +21,7 @@ public class Log {
 	}
 	
 	public String toString() {
-		return "(o:"+o.toString()+",(r:"+r+")";
+		return "("+o.toString()+","+r+")#";
 	}
 	
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import environments.Environment;
+import exceptions.BehaviourUndefinedException;
+import exceptions.PreconditionViolatedException;
 import rewardmachines.*;
 
 public class Agent {
@@ -25,7 +27,7 @@ public class Agent {
 	
 	// Debugged -> OK!
 	
-	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps) throws IOException {
+	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps) throws BehaviourUndefinedException {
 		
 		ArrayList<ArrayList<Log>> batch = new ArrayList<ArrayList<Log>>();
 		
@@ -71,21 +73,17 @@ public class Agent {
 		// TODO Second phase
 	}
 	
-	private void expandAutomaton() throws IOException {
+	private void expandAutomaton() throws PreconditionViolatedException, BehaviourUndefinedException {
 		
-		// System.out.println("###############################  Current Model ###############################");
-		// System.out.println(taskModel.toString());
-		// System.out.println("##############################################################################");
+
+
+		
 		
 		// See if model explains the data
-		if(trainingSet.explained()) {return;}
+		if(trainingSet.explained()) {System.out.println(taskModel.toString()); return;}
 		
 		// Get next unexplained
 		Unexplained unexplained = trainingSet.getNextUnexplained();
-		
-		// System.out.println("Source: "+unexplained.getState());
-		// System.out.println("Observation: "+unexplained.getObservation().toString());
-		// System.out.println("Reward: "+unexplained.getReward());
 		
 		// Try to extend 
 		for (int state = 0; state<taskModel.getNumberOfStates(); state++) {
@@ -107,18 +105,10 @@ public class Agent {
 				return;
 				
 			}
+			
 		}
 		
 		// Create new state
-		if(taskModel.getNumberOfStates()>2) {
-			System.out.println("###############################  Current Model ###############################");
-			System.out.println(taskModel.toString());
-			System.out.println("##############################################################################");
-			System.out.println("Source: "+unexplained.getState());
-			System.out.println("Observation: "+unexplained.getObservation().toString());
-			System.out.println("Reward: "+unexplained.getReward());
-			System.out.println(trainingSet.toString());
-			}
 		taskModel.addStateTransition(unexplained.getState(), unexplained.getObservation(), unexplained.getReward());
 		trainingSet.explain(taskModel);
 		
@@ -128,10 +118,8 @@ public class Agent {
 		
 	}
 
-	public void constructAutomaton(ArrayList<ArrayList<Log>> trainingData) throws IOException {
+	public void constructAutomaton(ArrayList<ArrayList<Log>> trainingData) throws IOException, PreconditionViolatedException, BehaviourUndefinedException {
 		if(this.automatonConstructed) {throw new IllegalArgumentException("Automaton already built");}
-		System.out.println(trainingSet.toString());
-		System.out.println("Construction started");
 		trainingSet.add(trainingData);
 		trainingSet.reset();
 		taskModel.reset();

@@ -1,8 +1,9 @@
 package rewardmachines;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+
+import exceptions.BehaviourUndefinedException;
 
 
 class TransitionRewardTable {
@@ -26,16 +27,16 @@ class TransitionRewardTable {
 	 * @return
 	 * The next state to which the transition leads, the reward obtained.
 	 * 
-	 * @throws IOException
+	 * @throws BehaviourUndefinedException
 	 * Exception thrown when there is no entry that satisfies the input. (i.e. transition undefined)
 	 * 
 	 */
 	
-	ITableEntry get(int source, Observation o) throws IOException {
+	ITableEntry get(int source, Observation o) throws BehaviourUndefinedException {
 		for(ITableEntry entry : table) {
 			if(entry.evaluate(source, o)) {return entry;}
 		}
-		throw new IOException("The state/observation pair is not included in the table");
+		throw new BehaviourUndefinedException("The state/observation pair is not included in the table");
 	}
 	
 	ITableEntry get(int source, int destination, int reward) {
