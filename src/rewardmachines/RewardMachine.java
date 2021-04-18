@@ -158,9 +158,13 @@ public abstract class RewardMachine {
 			return this.pushedReward;
 		}
 		
-		ITableEntry entry = table.get(currentState, observation);
-		this.currentState = entry.getDestination();
-		return entry.getReward();
+		try {
+			ITableEntry entry = table.get(currentState, observation);
+			this.currentState = entry.getDestination();
+			return entry.getReward();
+		} catch (BehaviourUndefinedException e) {return 0;}
+		
+		
 	}
 	
 	public boolean isDefined(Observation observation) {

@@ -14,6 +14,7 @@ public class Agent {
 	Environment e;
 	int nPropositions;
 	boolean automatonConstructed;
+	int cutOff;
 	
 	DataSession trainingSet;
 	
@@ -22,6 +23,7 @@ public class Agent {
 		this.e = e;
 		this.nPropositions = nPropositions;
 		this.automatonConstructed = false;
+		this.cutOff=Integer.MAX_VALUE;
 		trainingSet = new DataSession();
 	}
 	
@@ -69,6 +71,10 @@ public class Agent {
 		
 	}
 	
+	public void setCutOff(int cutOff) {
+		this.cutOff=cutOff;
+	}
+	
 	private void rollBack() {
 		// TODO Second phase
 	}
@@ -79,9 +85,8 @@ public class Agent {
 	
 	private void expandAutomaton() throws PreconditionViolatedException, BehaviourUndefinedException {
 		
-
-
-		
+		// Cut off for taking wrong branch, has to be set explicitly
+		if(taskModel.getNumberOfStates()>this.cutOff) {return;}
 		
 		// See if model explains the data
 		if(trainingSet.explained()) {return;}

@@ -10,11 +10,14 @@ public class Main {
 
 	public static void main(String[] args) throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
 		 
-		Trial exp = new Trial();
-		exp.run();
+		//Trial exp = new Trial();
+		//exp.run();
 		 
-		LogicalTableEntryTests ltet = new LogicalTableEntryTests();
-		ltet.run();
+		//LogicalTableEntryTests ltet = new LogicalTableEntryTests();
+		//ltet.run();
+		
+		InitialEvaluationExperiment e =  new InitialEvaluationExperiment();
+		e.run();
 		
 	 }
 	

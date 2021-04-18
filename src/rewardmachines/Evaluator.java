@@ -67,6 +67,18 @@ public class Evaluator {
 		return relativeTransitionImprovement;
 	}
 	
+	private long resultObjectSize;
+	
+	public long getResultObjectSize() {
+		return resultObjectSize;
+	}
+	
+	private long targetObjectSize;
+	
+	public long getTargetObjectSize() {
+		return targetObjectSize;
+	}
+	
 	public void evaluate(int nTraces, int nSteps, int nPropositions) throws PreconditionViolatedException, BehaviourUndefinedException {
 		if(evaluated) {throw new PreconditionViolatedException("The evaluation has already been completed");}
 		
@@ -98,6 +110,9 @@ public class Evaluator {
 		
 		relativeStateImprovement = result.getNumberOfStates()/target.getNumberOfStates();
 		relativeTransitionImprovement = result.getTableSize()/target.getTableSize();
+		
+		//resultObjectSize = ObjectSizeFetcher.getObjectSize(result);
+		//targetObjectSize = ObjectSizeFetcher.getObjectSize(target);
 		
 		evaluated = true;
 		

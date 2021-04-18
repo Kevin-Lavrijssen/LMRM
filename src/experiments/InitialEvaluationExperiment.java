@@ -1,5 +1,9 @@
 package experiments;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import agents.Agent;
@@ -7,6 +11,7 @@ import agents.Log;
 import environments.Environment;
 import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
+import rewardmachines.Evaluator;
 import rewardmachines.LMRM;
 import rewardmachines.MRM;
 import rewardmachines.RewardMachine;
@@ -17,31 +22,52 @@ public class InitialEvaluationExperiment implements IExperiment{
 	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
 		
 		// Number of runs for each setting
-		int nRuns = 10;
+		int nRuns = 3;
 		
 		// Parameters for the test of increasing states
-		int states_maxStates = 10;
+		int states_maxStates = 6;
 		int states_nPropositions = 2;
 		
 		// Parameters for the test of increasing number of propositions
-		int propositions_maxPropositions = 5;
-		int propositions_nStates = 3;
+		int propositions_maxPropositions = 6;
+		int propositions_nStates = 2;
 	
+		// CSV Header
+		String header = "#States_target,#Propositions,MAX_Reward,ElapsedTime_Nano,dEuclidean,dManhattan,#Mispredictions,relativeStateImprovement,relativeTransitionImprovement,absoluteStateImprovement,absoluteTransitionImprovement \n";
+		
+		// Create file to store results
+		File stateExperiment = new File("BasicStateExperiment.csv");
+		stateExperiment.createNewFile(); // if file already exists will do nothing 
+		FileOutputStream resultsStateExperiment = new FileOutputStream(stateExperiment, false); 
+		BufferedWriter bw1 = new BufferedWriter(new OutputStreamWriter(resultsStateExperiment));
+		bw1.write(header);
 		// Run for the different states
 		for (int run=0; run<nRuns;run++) {
 			for(int states = 2; states<states_maxStates; states++) {
 				String results = individualExperiment(states, states_nPropositions, 2);
-				// Add results to file
+				bw1.write(results);
 			}
 		}
 		
+		bw1.flush();
+		bw1.close();
+		
+		// Create file to store results
+		File propExperiment = new File("BasicPropositionExperiment.csv");
+		propExperiment.createNewFile(); // if file already exists will do nothing 
+		FileOutputStream resultsPropExperiment = new FileOutputStream(propExperiment, false); 
+		BufferedWriter bw2 = new BufferedWriter(new OutputStreamWriter(resultsPropExperiment));
+		bw2.write(header);
 		// Run for the different states
 		for (int run=0; run<nRuns;run++) {
 			for(int nPropositions = 1; nPropositions<propositions_maxPropositions; nPropositions++) {
 				String results = individualExperiment(propositions_nStates, nPropositions, 2);
-				// Add results to file
+				bw2.write(results);
 			}
 		}
+		
+		bw2.flush();
+		bw2.close();
 		
 	}
 
@@ -55,10 +81,12 @@ public class InitialEvaluationExperiment implements IExperiment{
 		// Set up logicalAgent
 		RewardMachine emptyLMRM = new LMRM();
 		Agent logicalAgent = new Agent(emptyLMRM, e, nPropositions);
+		logicalAgent.setCutOff(states+10);
 		
 		// Set up standardAgent
 		RewardMachine emptyMRM = new MRM();
 		Agent standardAgent = new Agent(emptyMRM, e, nPropositions);
+		standardAgent.setCutOff(states+10);
 		
 		// Gather initial data by one of the agents
 		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(1000, 20);
@@ -73,45 +101,70 @@ public class InitialEvaluationExperiment implements IExperiment{
 		logicalAgent.constructAutomaton(trainingData);
 		long elapsedTimeLogical = System.nanoTime()-startTimeStandard;
 		
+		// Evaluate both automaton wrt the goal
+		Evaluator eStandard = new Evaluator(task, standardAgent.getTaskModel());
+		eStandard.evaluate(2000, 25, nPropositions);
+		Evaluator eLogical = new Evaluator(task, logicalAgent.getTaskModel());
+		eLogical.evaluate(2000, 25, nPropositions);
+		
 		// Line for each type of agent
-		String logicalResult = "";
-		String standardResult = "";
+		String logicalResult = "LMRM,";
+		String standardResult = "MRM,";
 		
 		// Add experiment parameters
 		logicalResult += states + ",";
 		logicalResult += nPropositions + ",";
-		logicalResult += maxReward + ",";
+		logicalResult += maxReward-1 + ",";
 		
 		standardResult += states + ",";
 		standardResult += nPropositions + ",";
-		standardResult += maxReward + ",";
+		standardResult += maxReward-1 + ",";
 		
 		// TicToc
 		logicalResult += elapsedTimeLogical + ",";
 		standardResult += elapsedTimeStandard + ",";
 		
-		// nStatesLearned-nStatesActual
-		logicalResult += (task.getNumberOfStates()-logicalAgent.getTaskModel().getNumberOfStates()) + ",";
-		standardResult += (task.getNumberOfStates()-standardAgent.getTaskModel().getNumberOfStates()) + ",";
+		// Euclidean distance over all of the traces combined
+		logicalResult += eLogical.getEuclideanDistance() + ",";
+		standardResult += eStandard.getEuclideanDistance() + ",";
 		
-		// size of table
-		logicalResult += (task.getTableSize()-logicalAgent.getTaskModel().getTableSize()) + ",";
-		standardResult += (task.getTableSize())-standardAgent.getTaskModel().getTableSize() + ",";
+		// Manhattan distance over all of the traces combined
+		logicalResult += eLogical.getManhattanDistance() + ",";
+		standardResult += eStandard.getManhattanDistance() + ",";
 		
+		// Total amount of mispredictions over all of the traces
+		logicalResult += eLogical.getMispredictions() + ",";
+		standardResult += eStandard.getMispredictions() + ",";
 		
+		// The number of states of the learned model wrt the target in %
+		logicalResult += eLogical.getRelativeStateImprovement() + ",";
+		standardResult += eStandard.getRelativeStateImprovement() + ",";
 		
-		// Distance Minkowsky 1
-		logicalResult += elapsedTimeLogical + ",";
-		standardResult += elapsedTimeStandard + ",";
+		// The number of transitions of the learned model wrt the target in %
+		logicalResult += eLogical.getRelativeTransitionImprovement() + ",";
+		standardResult += eStandard.getRelativeTransitionImprovement() + ",";
 		
-		// Distance Minkowsky 2
-		logicalResult += elapsedTimeLogical + ",";
-		standardResult += elapsedTimeStandard + ",";
+		// Absolute number of states of the learned model wrt the target 
+		logicalResult += eLogical.getStateImprovement() + ",";
+		standardResult += eStandard.getStateImprovement() + ",";
 		
-		// Mispredictions
-		logicalResult += elapsedTimeLogical + ",";
-		standardResult += elapsedTimeStandard + ",";
+		// Absolute number of transitions of the learned model wrt the target
+		logicalResult += eLogical.getTransitionImprovement();
+		standardResult += eStandard.getTransitionImprovement();
 		
-		return null;
+		// Absolute number of transitions of the learned model wrt the target
+		//logicalResult += eLogical.getTargetObjectSize() + ",";
+		//standardResult += eStandard.getTargetObjectSize() + ",";
+		
+		// Absolute number of transitions of the learned model wrt the target
+		//logicalResult += eLogical.getResultObjectSize();
+		//standardResult += eStandard.getResultObjectSize();
+				
+		// End the line
+		logicalResult += "\n";
+		standardResult += "\n";
+		
+		return logicalResult + standardResult;
 	}
+	
 }
