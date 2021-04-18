@@ -7,6 +7,7 @@ import environments.Environment;
 import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.RewardMachine;
+import rewardmachines.Evaluator;
 import rewardmachines.LMRM;
 import rewardmachines.MRM;
 
@@ -15,11 +16,13 @@ public class Trial implements IExperiment{
 	Environment e;
 	Agent logicalAgent;
 	Agent standardAgent;
+	MRM task;
+	int nPropositions;
 	
 	public Trial() throws IOException {
 		
-		int nPropositions = 2;
-		int nStates = 3;
+		nPropositions = 5;
+		int nStates = 2;
 		int maxReward = 2;
 		
 		// Set up environment
@@ -30,7 +33,7 @@ public class Trial implements IExperiment{
 		
 		// Set up environment
 		//String fileLocation = "C:\\Users\\Kevin\\eclipse-workspace\\LogicalMealyRewardMachines\\testcases\\tc1\\MRM.csv";
-		MRM task = new MRM(nStates, nPropositions, maxReward);
+		task = new MRM(nStates, nPropositions, maxReward);
 		System.out.println(task.toString());
 		e = new Environment(task);
 				
@@ -49,12 +52,34 @@ public class Trial implements IExperiment{
 	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
 		
 		// Gather initial data by one of the agents
-		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(100, 10);
+		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(1000, 20);
 		
 		// Build the reward machines
+		logicalAgent.constructAutomaton(trainingData);
 		standardAgent.constructAutomaton(trainingData);
-		// logicalAgent.constructAutomaton(trainingData);
+
+
 		
+		
+		Evaluator evaluator = new Evaluator(task, standardAgent.getTaskModel());
+		evaluator.evaluate(100, 100, nPropositions);
+		
+		System.out.println();
+		System.out.println("Manhattan distance: " + evaluator.getManhattanDistance());
+		System.out.println("Euclidean distance: " + evaluator.getEuclideanDistance());
+		System.out.println("Mispredictions: "+evaluator.getMispredictions());
+		System.out.println("Improvement in number of states: "+evaluator.getStateImprovement());
+		System.out.println("Improvement in number of transitions: "+evaluator.getTransitionImprovement());
+		
+		Evaluator levaluator = new Evaluator(task, logicalAgent.getTaskModel());
+		levaluator.evaluate(100, 100, nPropositions);
+		
+		System.out.println();
+		System.out.println("Manhattan distance: " + levaluator.getManhattanDistance());
+		System.out.println("Euclidean distance: " + levaluator.getEuclideanDistance());
+		System.out.println("Mispredictions: "+levaluator.getMispredictions());
+		System.out.println("Improvement in number of states: "+levaluator.getStateImprovement());
+		System.out.println("Improvement in number of transitions: "+levaluator.getTransitionImprovement());
 		
 	}
 

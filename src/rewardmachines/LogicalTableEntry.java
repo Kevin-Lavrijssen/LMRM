@@ -1,5 +1,7 @@
 package rewardmachines;
 
+import java.util.ArrayList;
+
 public class LogicalTableEntry implements ITableEntry {
 
 	int source;
@@ -16,7 +18,7 @@ public class LogicalTableEntry implements ITableEntry {
 	
 	@Override
 	public void merge(Observation o) {
-		constraint.merge(o);
+		constraint.include(o);
 	}
 
 	@Override
@@ -51,7 +53,14 @@ public class LogicalTableEntry implements ITableEntry {
 	}
 
 	public String toString() {
-		return source + "," +constraint.toString() + "," + destination + "," + reward +"\n";
+		ArrayList<String> dnf = constraint.getDNF();
+		String string ="";
+		
+		for (String constraint : dnf) {
+			string+=source + "," +constraint + "," + destination + "," + reward +"\n";
+		}
+		
+		return string;
 	}
 	
 }

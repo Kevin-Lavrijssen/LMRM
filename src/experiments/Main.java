@@ -13,8 +13,8 @@ public class Main {
 		Trial exp = new Trial();
 		exp.run();
 		 
-		//HighLevelTests t = new HighLevelTests();
-		//t.run();
+		LogicalTableEntryTests ltet = new LogicalTableEntryTests();
+		ltet.run();
 		
 	 }
 	

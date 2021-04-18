@@ -67,9 +67,9 @@ public class MRM extends RewardMachine{
 
 	@Override
 	public void commitTransition() {
-		System.out.println("Transition Committed");
 		ITableEntry entry = new StandardTableEntry(pushedSource, pushedObservation, pushedDestination, pushedReward);
 		table.addEntry(entry);
+		System.out.print(entry.toString());
 		clearTemporaryTransition();
 	}
 	
@@ -79,13 +79,13 @@ public class MRM extends RewardMachine{
 
 	@Override
 	public void addStateTransition(int source, Observation o, int reward) {
-		System.out.println("New state constructed");
 		// Create new state
 		this.nStates += 1;
 		
 		// Create transition to new state
 		ITableEntry entry = new StandardTableEntry(source, o, nStates-1, reward);
 		table.addEntry(entry);
+		System.out.print(entry.toString());
 		clearTemporaryTransition();
 	}
 	

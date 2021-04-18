@@ -73,6 +73,10 @@ public class Agent {
 		// TODO Second phase
 	}
 	
+	public RewardMachine getTaskModel() {
+		return this.taskModel;
+	}
+	
 	private void expandAutomaton() throws PreconditionViolatedException, BehaviourUndefinedException {
 		
 
@@ -80,7 +84,7 @@ public class Agent {
 		
 		
 		// See if model explains the data
-		if(trainingSet.explained()) {System.out.println(taskModel.toString()); return;}
+		if(trainingSet.explained()) {return;}
 		
 		// Get next unexplained
 		Unexplained unexplained = trainingSet.getNextUnexplained();

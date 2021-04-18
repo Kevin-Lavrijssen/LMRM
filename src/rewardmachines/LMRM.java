@@ -15,10 +15,12 @@ public class LMRM extends RewardMachine{
 	public void commitTransition() {
 		// See if there is a transition to merge
 		ITableEntry entry = table.get(pushedSource, pushedDestination, pushedReward);
-		if (entry!=null) {entry.merge(pushedObservation);}
+		if (entry!=null) {entry.merge(pushedObservation);clearTemporaryTransition();System.out.println(entry.toString());return;}
 		
 		// Else create a new transition
-		table.addEntry(new LogicalTableEntry(pushedSource, pushedObservation, pushedDestination, pushedReward));
+		LogicalTableEntry nEntry = new LogicalTableEntry(pushedSource, pushedObservation, pushedDestination, pushedReward);
+		table.addEntry(nEntry);
+		System.out.println(nEntry.toString());
 		clearTemporaryTransition();
 	}
 	
@@ -35,5 +37,6 @@ public class LMRM extends RewardMachine{
 		ITableEntry entry = new LogicalTableEntry(source, o, nStates-1, reward);
 		table.addEntry(entry);
 		clearTemporaryTransition();
+		System.out.println(entry.toString());
 	}
 }

@@ -76,14 +76,7 @@ public class DataSession {
 		
 		while(remainderIndex1<trace1.size() && remainderIndex2<trace2.size()) {
 			if(!trace1.get(remainderIndex1).getObservation().equals(trace2.get(remainderIndex2).getObservation())) {return true;}
-			if(trace1.get(remainderIndex1).getReward()!=trace2.get(remainderIndex2).getReward()) {
-				
-				System.out.println(rm.toString());
-				System.out.println(t1.toString(remainderState1, remainderIndex1));
-				System.out.println(t2.toString(remainderState2, remainderIndex2));
-				System.out.println(t1.toString());
-				System.out.println(t2.toString());
-				return false;}
+			if(trace1.get(remainderIndex1).getReward()!=trace2.get(remainderIndex2).getReward()) {return false;}
 			remainderIndex1++;
 			remainderIndex2++;
 		}

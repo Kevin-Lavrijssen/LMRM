@@ -79,4 +79,8 @@ class TransitionRewardTable {
 		return me;
 	}
 	
+	public int getSize() {
+		return table.size();
+	}
+	
 }

@@ -71,6 +71,14 @@ public abstract class RewardMachine {
 	protected TransitionRewardTable table;
 	
 	/**
+	 * Returns the size of the table
+	 */
+	
+	public int getTableSize() {
+		return table.getSize();
+	}
+	
+	/**
 	 * Prints a string representation of the machine.
 	 */
 	
