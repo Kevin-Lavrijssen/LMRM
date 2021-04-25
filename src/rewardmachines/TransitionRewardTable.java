@@ -39,6 +39,15 @@ class TransitionRewardTable {
 		throw new BehaviourUndefinedException("The state/observation pair is not included in the table");
 	}
 	
+	/**
+	 * Method that return the entry with the given source, destination and reward if it exists. Else returns null.
+	 * 
+	 * @param source		| The source of the entry.
+	 * @param destination	| The destination of the entry.
+	 * @param reward		| The reward of the entry.
+	 * @return				| The corresponding entry if it exists, else null.
+	 */
+	
 	ITableEntry get(int source, int destination, int reward) {
 		for (ITableEntry entry : table) {
 			if(entry.getSource()==source && entry.getDestination()==destination && entry.getReward()==reward) {
@@ -49,6 +58,12 @@ class TransitionRewardTable {
 		return null;
 		
 	}
+	
+	/**
+	 * Method that adds the given entry to the transition/reward table.
+	 * 
+	 * @param entry	| ITableEntry that is added to the table.
+	 */
 	
 	void addEntry(ITableEntry entry) {
 		table.add(entry);
@@ -71,6 +86,10 @@ class TransitionRewardTable {
 		}		
 	}
 	
+	/**
+	 * Displays the table as a string by calling toString on each of its entries.
+	 */
+	
 	public String toString() {
 		String me = "";
 		for (ITableEntry e:table) {
@@ -78,6 +97,12 @@ class TransitionRewardTable {
 		}
 		return me;
 	}
+	
+	/**
+	 * Method that returns the number of entries in the table.
+	 * 
+	 * @return	Number of entries in the table. 
+	 */
 	
 	public int getSize() {
 		return table.size();

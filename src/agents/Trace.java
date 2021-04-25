@@ -103,6 +103,8 @@ public class Trace {
 
 	public boolean isConsistent(RewardMachine rm) throws BehaviourUndefinedException {
 		
+		if(this.explained()) {return true;}
+		
 		rm.setState(currentState);
 		int i=index;
 		while(i<trace.size()) {

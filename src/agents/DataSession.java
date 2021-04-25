@@ -40,6 +40,11 @@ public class DataSession {
 
 	public boolean consistent(RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException {
 		
+		// Individual consistency check
+		for (Trace trace:data) {
+			if(!trace.isConsistent(rm)) {return false;}
+		}
+		
 		// Pairwise consistency check
 		for(int trace1=0;trace1<data.size()-1;trace1++) {			
 			Trace t1 = data.get(trace1);
@@ -56,8 +61,6 @@ public class DataSession {
 	private boolean consistent(Trace t1, Trace t2, RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException {
 		if(t1==t2) {throw new PreconditionViolatedException("A trace is always consistent with itself");}
 		if(t1.explained()||t2.explained()) {return true;}
-		if(!t1.isConsistent(rm)) {return false;}
-		if(!t2.isConsistent(rm)) {return false;}
 		
 		int[] remainder1 = t1.getRemainder(rm);
 		int[] remainder2 = t2.getRemainder(rm);

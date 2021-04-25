@@ -6,19 +6,42 @@ public class TransitionConstraint {
 
 	ArrayList<String> dnf;
 	
+	/**
+	 * Creates the new transition constraint based on the given observation. Upon initialization a transition constraint
+	 * covers only one observation. After that, the coverage can be increased or decreased by one observation at a time.
+	 * 
+	 * @param o | The observation that is initially covered.
+	 */
+	
 	public TransitionConstraint(Observation o) {
 		dnf = new ArrayList<String>();
 		dnf.add(o.toString());
 	}
 	
+	/**
+	 * Method to retrieve the full constraint in disjunctive normal form.
+	 * 
+	 * @return	The transition constraint in disjunctive normal form.
+	 */
+	
 	public ArrayList<String> getDNF(){
 		return dnf;
 	}
 
+	/**
+	 * Method to increase the coverage of the constraint to include the given observation. 
+	 * 
+	 * @param o	| The observation the transition constraint should cover.
+	 */
+	
 	public void include(Observation o) {
 		mergeObservation(o);
 		update();
 	}
+	
+	/**
+	 * This method checks if the any of the conjunctions can be merged, and if so, merges them.
+	 */
 
 	private void update() {
 		while (true) {
@@ -28,6 +51,11 @@ public class TransitionConstraint {
 		}
 	}
 
+	/**
+	 * Method to merge the conjunctions of the transition constraint until there are no more merges possible and the 
+	 * disjunctive normal form is in its smallest form.
+	 */
+	
 	private void merge() {
 
 		for(int i=0; i<dnf.size()-1; i++) {
@@ -44,7 +72,7 @@ public class TransitionConstraint {
 			}
 		}
 	}
-
+	
 	private void mergeObservation(Observation o) {
 		for (String conjunction : dnf) {
 			if(mergeable(conjunction, o.toString())) {

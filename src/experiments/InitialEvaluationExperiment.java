@@ -22,19 +22,20 @@ public class InitialEvaluationExperiment implements IExperiment{
 	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
 		
 		// Number of runs for each setting
-		int nRuns = 3;
+		int nRuns = 10;
 		
 		// Parameters for the test of increasing states
-		int states_maxStates = 6;
+		int states_maxStates = 10;
 		int states_nPropositions = 2;
 		
 		// Parameters for the test of increasing number of propositions
-		int propositions_maxPropositions = 6;
+		int propositions_maxPropositions = 11;
 		int propositions_nStates = 2;
 	
 		// CSV Header
 		String header = "#States_target,#Propositions,MAX_Reward,ElapsedTime_Nano,dEuclidean,dManhattan,#Mispredictions,relativeStateImprovement,relativeTransitionImprovement,absoluteStateImprovement,absoluteTransitionImprovement \n";
 		
+		/*
 		// Create file to store results
 		File stateExperiment = new File("BasicStateExperiment.csv");
 		stateExperiment.createNewFile(); // if file already exists will do nothing 
@@ -51,16 +52,17 @@ public class InitialEvaluationExperiment implements IExperiment{
 		
 		bw1.flush();
 		bw1.close();
+		*/
 		
 		// Create file to store results
-		File propExperiment = new File("BasicPropositionExperiment.csv");
+		File propExperiment = new File("BasicPropositionExperiment_1.csv");
 		propExperiment.createNewFile(); // if file already exists will do nothing 
 		FileOutputStream resultsPropExperiment = new FileOutputStream(propExperiment, false); 
 		BufferedWriter bw2 = new BufferedWriter(new OutputStreamWriter(resultsPropExperiment));
 		bw2.write(header);
 		// Run for the different states
 		for (int run=0; run<nRuns;run++) {
-			for(int nPropositions = 1; nPropositions<propositions_maxPropositions; nPropositions++) {
+			for(int nPropositions = 1; nPropositions<6; nPropositions++) {
 				String results = individualExperiment(propositions_nStates, nPropositions, 2);
 				bw2.write(results);
 			}
@@ -68,6 +70,23 @@ public class InitialEvaluationExperiment implements IExperiment{
 		
 		bw2.flush();
 		bw2.close();
+		
+		// Create file to store results
+				File propExperiment2 = new File("BasicPropositionExperiment_2.csv");
+				propExperiment2.createNewFile(); // if file already exists will do nothing 
+				FileOutputStream resultsPropExperiment2 = new FileOutputStream(propExperiment2, false); 
+				BufferedWriter bw3 = new BufferedWriter(new OutputStreamWriter(resultsPropExperiment2));
+				bw3.write(header);
+				// Run for the different states
+				for (int run=0; run<nRuns;run++) {
+					for(int nPropositions = 6; nPropositions<propositions_maxPropositions; nPropositions++) {
+						String results = individualExperiment(propositions_nStates, nPropositions, 2);
+						bw3.write(results);
+					}
+				}
+				
+				bw3.flush();
+				bw3.close();
 		
 	}
 
@@ -81,15 +100,15 @@ public class InitialEvaluationExperiment implements IExperiment{
 		// Set up logicalAgent
 		RewardMachine emptyLMRM = new LMRM();
 		Agent logicalAgent = new Agent(emptyLMRM, e, nPropositions);
-		logicalAgent.setCutOff(states+10);
+		logicalAgent.setCutOff(states+2);
 		
 		// Set up standardAgent
 		RewardMachine emptyMRM = new MRM();
 		Agent standardAgent = new Agent(emptyMRM, e, nPropositions);
-		standardAgent.setCutOff(states+10);
+		standardAgent.setCutOff(states+2);
 		
 		// Gather initial data by one of the agents
-		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(1000, 20);
+		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(2000, 20);
 				
 		// Build the reward machines
 		long startTimeStandard = System.nanoTime();
