@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import agents.Agent;
 import agents.Log;
-import environments.Environment;
+import environments.DirectEnvironment;
 import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.Evaluator;
@@ -94,7 +94,7 @@ public class InitialEvaluationExperiment implements IExperiment{
 	public String individualExperiment(int states, int nPropositions, int maxReward) throws IOException, PreconditionViolatedException, BehaviourUndefinedException{
 		
 		MRM task = new MRM(states, nPropositions, maxReward);
-		Environment e = new Environment(task);
+		DirectEnvironment e = new DirectEnvironment(task);
 				
 		
 		// Set up logicalAgent

@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import environments.Environment;
+import environments.DirectEnvironment;
 import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.*;
@@ -11,14 +11,14 @@ import rewardmachines.*;
 public class Agent {
 
 	RewardMachine taskModel;
-	Environment e;
+	DirectEnvironment e;
 	int nPropositions;
 	boolean automatonConstructed;
 	int cutOff;
 	
 	DataSession trainingSet;
 	
-	public Agent(RewardMachine emptyModel, Environment e, int nPropositions) {
+	public Agent(RewardMachine emptyModel, DirectEnvironment e, int nPropositions) {
 		this.taskModel=emptyModel;
 		this.e = e;
 		this.nPropositions = nPropositions;

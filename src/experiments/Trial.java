@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import agents.Agent;
 import agents.Log;
-import environments.Environment;
+import environments.DirectEnvironment;
 import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.RewardMachine;
@@ -13,7 +13,7 @@ import rewardmachines.MRM;
 
 public class Trial implements IExperiment{
 	
-	Environment e;
+	DirectEnvironment e;
 	Agent logicalAgent;
 	Agent standardAgent;
 	MRM task;
@@ -35,7 +35,7 @@ public class Trial implements IExperiment{
 		//String fileLocation = "C:\\Users\\Kevin\\eclipse-workspace\\LogicalMealyRewardMachines\\testcases\\tc1\\MRM.csv";
 		task = new MRM(nStates, nPropositions, maxReward);
 		System.out.println(task.toString());
-		e = new Environment(task);
+		e = new DirectEnvironment(task);
 				
 		
 		// Set up logicalAgent

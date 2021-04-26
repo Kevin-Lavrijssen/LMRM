@@ -4,11 +4,11 @@ import exceptions.BehaviourUndefinedException;
 import rewardmachines.RewardMachine;
 import rewardmachines.Observation;
 
-public class Environment {
+public class DirectEnvironment {
 
 	RewardMachine task;
 	
-	public Environment(RewardMachine task) {
+	public DirectEnvironment(RewardMachine task) {
 		this.task=task;
 	}
 	
