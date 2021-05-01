@@ -13,21 +13,20 @@ public class BlockSortingEnvironment implements IEnvironment{
 		actions = new String[] {"PickUp", "Drop", "North", "East", "South", "West"};
 		world = new BlockSortingWorld(nTypes, nBinsPerType, nSourcesPerType, nondeterminism, xSize, ySize, actions);
 		labeling = new BlockSortingLabeling(nTypes);
-		// TODO: Create the reward machine
-		
+		rewardFunction = new BlockSortingRewardFunction(nTypes);
 	}
 	
 	private String[] actions;
 	private BlockSortingWorld world;
 	private BlockSortingLabeling labeling;
-	private RewardMachine rm;
+	private BlockSortingRewardFunction rewardFunction;
 	
 	
 	@Override
 	public Log execute(String action) throws BehaviourUndefinedException {
 		int[] newState = world.execute(action);
 		Observation observation = labeling.label(action, newState);
-		int reward = rm.execute(observation);
+		int reward = rewardFunction.execute(observation);
 		return new Log(observation, reward);
 				
 	}

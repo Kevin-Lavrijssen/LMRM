@@ -14,7 +14,7 @@ public class BlockSortingRewardFunction implements IRewardFunction {
 	private int nTypes;
 	
 	@Override
-	public int evaluate(Observation o) {
+	public int execute(Observation o) {
 		if(o.toInteger()==0) {return 0;}
 		for (int i=0; i<nTypes;i++) {
 			if(typesCarrying[i]==1 && o.toString().charAt(i+nTypes)==1) {typesCarrying[i]=0; return 1;}

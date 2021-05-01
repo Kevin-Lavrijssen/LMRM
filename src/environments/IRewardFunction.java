@@ -4,6 +4,6 @@ import rewardmachines.Observation;
 
 public interface IRewardFunction {
 
-	public int evaluate(Observation o);
+	public int execute(Observation o);
 	
 }

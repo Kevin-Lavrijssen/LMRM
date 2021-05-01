@@ -33,7 +33,7 @@ public class InitialEvaluationExperiment implements IExperiment{
 		int propositions_nStates = 2;
 	
 		// CSV Header
-		String header = "#States_target,#Propositions,MAX_Reward,ElapsedTime_Nano,dEuclidean,dManhattan,#Mispredictions,relativeStateImprovement,relativeTransitionImprovement,absoluteStateImprovement,absoluteTransitionImprovement \n";
+		String header = "#States_target,#Propositions,MAX_Reward,ElapsedTime_Nano,dEuclidean,dManhattan,#Mispredictions,relativeStateImprovement,relativeTransitionImprovement,absoluteStateImprovement,absoluteTransitionImprovement, size \n";
 		
 		/*
 		// Create file to store results
@@ -52,7 +52,7 @@ public class InitialEvaluationExperiment implements IExperiment{
 		
 		bw1.flush();
 		bw1.close();
-		*/
+		
 		
 		// Create file to store results
 		File propExperiment = new File("BasicPropositionExperiment_1.csv");
@@ -71,6 +71,8 @@ public class InitialEvaluationExperiment implements IExperiment{
 		bw2.flush();
 		bw2.close();
 		
+		*/
+		
 		// Create file to store results
 				File propExperiment2 = new File("BasicPropositionExperiment_2.csv");
 				propExperiment2.createNewFile(); // if file already exists will do nothing 
@@ -79,10 +81,8 @@ public class InitialEvaluationExperiment implements IExperiment{
 				bw3.write(header);
 				// Run for the different states
 				for (int run=0; run<nRuns;run++) {
-					for(int nPropositions = 6; nPropositions<propositions_maxPropositions; nPropositions++) {
-						String results = individualExperiment(propositions_nStates, nPropositions, 2);
-						bw3.write(results);
-					}
+					String results = individualExperiment(propositions_nStates, 5, 2);
+					bw3.write(results);
 				}
 				
 				bw3.flush();
@@ -100,15 +100,15 @@ public class InitialEvaluationExperiment implements IExperiment{
 		// Set up logicalAgent
 		RewardMachine emptyLMRM = new LMRM();
 		Agent logicalAgent = new Agent(emptyLMRM, e, nPropositions);
-		logicalAgent.setCutOff(states+2);
+		logicalAgent.setCutOff(states+1);
 		
 		// Set up standardAgent
 		RewardMachine emptyMRM = new MRM();
 		Agent standardAgent = new Agent(emptyMRM, e, nPropositions);
-		standardAgent.setCutOff(states+2);
+		standardAgent.setCutOff(states+1);
 		
 		// Gather initial data by one of the agents
-		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(2000, 20);
+		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(4000, 8);
 				
 		// Build the reward machines
 		long startTimeStandard = System.nanoTime();
@@ -168,8 +168,12 @@ public class InitialEvaluationExperiment implements IExperiment{
 		standardResult += eStandard.getStateImprovement() + ",";
 		
 		// Absolute number of transitions of the learned model wrt the target
-		logicalResult += eLogical.getTransitionImprovement();
-		standardResult += eStandard.getTransitionImprovement();
+		logicalResult += eLogical.getTransitionImprovement() + ",";
+		standardResult += eStandard.getTransitionImprovement() + ",";
+		
+		// Absolute number of transitions of the learned model wrt the target
+		logicalResult += logicalAgent.getTaskModel().getTableSize();
+		standardResult += standardAgent.getTaskModel().getTableSize();
 		
 		// Absolute number of transitions of the learned model wrt the target
 		//logicalResult += eLogical.getTargetObjectSize() + ",";
