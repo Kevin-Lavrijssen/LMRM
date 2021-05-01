@@ -1,8 +1,5 @@
 package rewardmachines;
 import java.io.IOException;
-
-import exceptions.BehaviourUndefinedException;
-
 public abstract class RewardMachine {
 
 
@@ -151,19 +148,33 @@ public abstract class RewardMachine {
 	 * 										| input is undefined.
 	 */
 	
-	public int execute(Observation observation) throws BehaviourUndefinedException {
+	public int execute(Observation observation) {
 		
 		if(this.pushedSource == this.currentState  && this.pushedObservation!=null && this.pushedObservation.equals(observation)) {
 			this.currentState = this.pushedDestination;
 			return this.pushedReward;
 		}
 		
-		try {
-			ITableEntry entry = table.get(currentState, observation);
+		ITableEntry entry = table.get(currentState, observation);
+		if(entry!=null) {
 			this.currentState = entry.getDestination();
 			return entry.getReward();
-		} catch (BehaviourUndefinedException e) {return 0;}
+		}
 		
+		return -1;
+		
+	}
+	
+	public int[] execute(int startState, Observation observation) {
+		
+		if(this.pushedSource == startState  && this.pushedObservation!=null && this.pushedObservation.equals(observation)) {
+			this.currentState = this.pushedDestination;
+			return new int[]{this.pushedDestination, this.pushedReward};
+		}
+		
+		ITableEntry entry = table.get(startState, observation);
+		if(entry != null) {return new int[] {entry.getDestination(), entry.getReward()};}
+		else {return null;}		
 		
 	}
 	
@@ -172,10 +183,15 @@ public abstract class RewardMachine {
 			return true;
 		}
 		
-		try {
-		ITableEntry entry = table.get(currentState, observation);
-		return true;
-		} catch (BehaviourUndefinedException e) {return false;}
+		return table.get(currentState, observation)!=null;
+	}
+	
+	public boolean isDefined(int state, Observation observation) {
+		if(this.pushedSource == state  && this.pushedObservation!=null && this.pushedObservation.equals(observation)) {
+			return true;
+		}
+		
+		return table.get(state, observation)!=null;
 	}
 
 	/**
@@ -197,5 +213,9 @@ public abstract class RewardMachine {
 	 */
 	
 	public abstract void addStateTransition(int source, Observation o, int reward);
+	
+	public String getPushedTransition() {
+		return this.pushedSource +","+this.pushedObservation.toString()+","+this.pushedDestination+","+this.pushedReward+"\n";
+	}
 
 }

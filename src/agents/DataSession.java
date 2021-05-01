@@ -3,14 +3,16 @@ package agents;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.RewardMachine;
 
 public class DataSession {
 	
 	ArrayList<Trace> data;
+	
+	// Temporary multiprocessing
+	ConsistencyChecker[] checkers;
+	ArrayList<Thread> currentThreads;
 
 	public DataSession(ArrayList<ArrayList<Log>> traces) {
 		this.data = new ArrayList<Trace>();
@@ -18,10 +20,22 @@ public class DataSession {
 			Trace t = new Trace(trace);
 			data.add(t);
 		}
+		setConsistencyCheckers();
+		currentThreads = new ArrayList<Thread>();
 	}
 	
+	private void setConsistencyCheckers() {
+		int cores = Runtime.getRuntime().availableProcessors();
+		checkers = new ConsistencyChecker[cores];
+		for (int i=0; i<cores; i++) {
+			checkers[i] = new ConsistencyChecker(data, i, cores);
+		}
+	}
+
 	public DataSession() {
 		this.data = new ArrayList<Trace>();
+		setConsistencyCheckers();
+		currentThreads = new ArrayList<Thread>();
 	}
 
 	public boolean explained() {
@@ -38,13 +52,13 @@ public class DataSession {
 		throw new PreconditionViolatedException("getNextUnexplained() invoked, but all traces were explained.");
 	}
 
-	public boolean consistent(RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException {
+	public boolean consistent(RewardMachine rm) throws PreconditionViolatedException {
 		
 		// Individual consistency check
 		for (Trace trace:data) {
 			if(!trace.isConsistent(rm)) {return false;}
 		}
-		
+		/*
 		// Pairwise consistency check
 		for(int trace1=0;trace1<data.size()-1;trace1++) {			
 			Trace t1 = data.get(trace1);
@@ -55,10 +69,38 @@ public class DataSession {
 		}
 		
 		return true;
+		*/
+		
+		for (ConsistencyChecker checker:checkers) {
+			checker.setRM(rm);
+		}
+		
+		for (ConsistencyChecker checker:checkers) {
+			Thread thread = new Thread(checker);
+			thread.start();
+			currentThreads.add(thread);
+		}
+		
+		boolean done = false;
+		while(done==false) {
+			done=true;
+			for(Thread t : currentThreads) {
+				if(t.getState()!=Thread.State.TERMINATED) {try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} done = false; break;}
+			}
+		}
+		
+		return checkers[0].isConsistent() && checkers[1].isConsistent()&& checkers[2].isConsistent()&& checkers[3].isConsistent();
+		
+		
 		
 	}
 
-	private boolean consistent(Trace t1, Trace t2, RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException {
+	private boolean consistent(Trace t1, Trace t2, RewardMachine rm) throws PreconditionViolatedException {
 		if(t1==t2) {throw new PreconditionViolatedException("A trace is always consistent with itself");}
 		if(t1.explained()||t2.explained()) {return true;}
 		
@@ -88,7 +130,7 @@ public class DataSession {
 	
 	}
 
-	public void explain(RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException {
+	public void explain(RewardMachine rm) throws PreconditionViolatedException {
 		for(Trace trace:data) {if(!trace.explained()) {trace.explain(rm);}}
 	}
 

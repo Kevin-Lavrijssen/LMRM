@@ -4,38 +4,41 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import environments.DirectEnvironment;
-import exceptions.BehaviourUndefinedException;
+import environments.IEnvironment;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.*;
 
 public class Agent {
 
 	RewardMachine taskModel;
-	DirectEnvironment e;
+	IEnvironment e;
 	int nPropositions;
 	boolean automatonConstructed;
 	int cutOff;
+	String[] actions;
 	
 	DataSession trainingSet;
 	
-	public Agent(RewardMachine emptyModel, DirectEnvironment e, int nPropositions) {
+	public Agent(RewardMachine emptyModel, IEnvironment e, int nPropositions, String[] actions) {
 		this.taskModel=emptyModel;
 		this.e = e;
 		this.nPropositions = nPropositions;
 		this.automatonConstructed = false;
 		this.cutOff=Integer.MAX_VALUE;
+		this.actions=actions;
 		trainingSet = new DataSession();
 	}
 	
 	// Debugged -> OK!
 	
-	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps) throws BehaviourUndefinedException {
+	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps) {
 		
+		Random random = new Random();
+		int maxActionIndex = actions.length;
 		ArrayList<ArrayList<Log>> batch = new ArrayList<ArrayList<Log>>();
 		
 		for (int iTrace = 0; iTrace<nTraces; iTrace++) {
 			
-			Random random = new Random();
 			int maxIntValue = (int) Math.pow(2, nPropositions);
 			
 			// Create a new empty trace
@@ -48,10 +51,7 @@ public class Agent {
 				
 				// Execute  a step
 				Observation o = new Observation(random.nextInt(maxIntValue), nPropositions);
-				int r = e.execute(o);
-				
-				// Create a log
-				Log l = new Log(o, r);
+				Log l = e.execute(actions[random.nextInt(maxActionIndex)]);
 				
 				// Append the log to the trace
 				newTrace.add(l);
@@ -83,7 +83,7 @@ public class Agent {
 		return this.taskModel;
 	}
 	
-	private void expandAutomaton() throws PreconditionViolatedException, BehaviourUndefinedException {
+	private void expandAutomaton() throws PreconditionViolatedException {
 		
 		// Cut off for taking wrong branch, has to be set explicitly
 		if(taskModel.getNumberOfStates()>this.cutOff) {return;}
@@ -127,7 +127,7 @@ public class Agent {
 		
 	}
 
-	public void constructAutomaton(ArrayList<ArrayList<Log>> trainingData) throws IOException, PreconditionViolatedException, BehaviourUndefinedException {
+	public void constructAutomaton(ArrayList<ArrayList<Log>> trainingData) throws IOException, PreconditionViolatedException {
 		if(this.automatonConstructed) {throw new IllegalArgumentException("Automaton already built");}
 		trainingSet.add(trainingData);
 		trainingSet.reset();

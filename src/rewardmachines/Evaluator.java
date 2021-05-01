@@ -1,6 +1,5 @@
 package rewardmachines;
 import java.util.Random;
-import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import tools.Distance;
 
@@ -79,7 +78,7 @@ public class Evaluator {
 		return targetObjectSize;
 	}
 	
-	public void evaluate(int nTraces, int nSteps, int nPropositions) throws PreconditionViolatedException, BehaviourUndefinedException {
+	public void evaluate(int nTraces, int nSteps, int nPropositions) throws PreconditionViolatedException {
 		if(evaluated) {throw new PreconditionViolatedException("The evaluation has already been completed");}
 		
 		stateImprovement = target.getNumberOfStates()-result.getNumberOfStates();
@@ -103,7 +102,6 @@ public class Evaluator {
 			
 			minkowski1+=Distance.minkowski(targetTrace, resultTrace, 1);
 			minkowski2+=Distance.minkowski(targetTrace, resultTrace, 2);
-			if(minkowski2!=0) {System.out.println("Euclidean is no longer 0");}
 			mispredictions+=Distance.mispredictions(targetTrace, resultTrace);
 			
 		}

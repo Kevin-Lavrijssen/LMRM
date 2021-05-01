@@ -2,7 +2,6 @@ package environments.blockSorting;
 
 import agents.Log;
 import environments.IEnvironment;
-import exceptions.BehaviourUndefinedException;
 import rewardmachines.Observation;
 import rewardmachines.RewardMachine;
 
@@ -23,7 +22,7 @@ public class BlockSortingEnvironment implements IEnvironment{
 	
 	
 	@Override
-	public Log execute(String action) throws BehaviourUndefinedException {
+	public Log execute(String action) {
 		int[] newState = world.execute(action);
 		Observation observation = labeling.label(action, newState);
 		int reward = rewardFunction.execute(observation);

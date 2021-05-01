@@ -1,8 +1,6 @@
 package agents;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.RewardMachine;
 
@@ -10,18 +8,34 @@ public class Trace {
 
 	private ArrayList<Log> trace;
 	
-	public int[] getRemainder(RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException{
+	public int[] getRemainder(RewardMachine rm) throws PreconditionViolatedException{
 		
-		rm.setState(currentState);
+		//rm.setState(currentState);
 		int remainderState = currentState;
 		int remainderIndex = index;
 		
+		/*
 		while(remainderIndex<trace.size()) {
 			Log log = trace.get(remainderIndex);
-			if(!rm.isDefined(log.getObservation())) {return new int[] {remainderState, remainderIndex};}
-			if(log.getReward()!=rm.execute(log.getObservation())) {
+			if(!rm.isDefined(remainderState, log.getObservation())) {return new int[] {remainderState, remainderIndex};}
+			int[] destinationReward = rm.execute(remainderState, log.getObservation());
+			if(log.getReward()!=destinationReward[1]) {
+				System.out.println("Expected: "+log.getReward() + " Actual: " + destinationReward[1]);
 				throw new PreconditionViolatedException("Automaton inconsistent with the trace");}
-			remainderState=rm.getCurrentState();
+			remainderState=destinationReward[0];
+			remainderIndex+=1;
+		}*/
+		
+		while(remainderIndex<trace.size()) {
+			Log log = trace.get(remainderIndex);
+			int[] destinationReward = rm.execute(remainderState, log.getObservation());
+			if(destinationReward == null) {return new int[] {remainderState, remainderIndex};}
+			if(log.getReward()!=destinationReward[1]) {
+				System.out.println("State: " + remainderState + " Observation: "+log.getObservation().toString());
+				System.out.println("Expected: "+log.getReward() + " Actual: " + destinationReward[1]);
+				System.out.println(this.toString());
+				throw new PreconditionViolatedException("Automaton inconsistent with the trace");}
+			remainderState=destinationReward[0];
 			remainderIndex+=1;
 		}
 		
@@ -57,7 +71,7 @@ public class Trace {
 		return new Unexplained(currentState, trace.get(index));
 	}
 
-	public void explain(RewardMachine rm) throws PreconditionViolatedException, BehaviourUndefinedException {
+	public void explain(RewardMachine rm) throws PreconditionViolatedException {
 		if (currentState==-1 && index==-1) {throw new PreconditionViolatedException("Cannot further explain a trace that has already been explained");}
 		
 		rm.setState(currentState);
@@ -101,7 +115,7 @@ public class Trace {
 		return string+="\n";
 	}
 
-	public boolean isConsistent(RewardMachine rm) throws BehaviourUndefinedException {
+	public boolean isConsistent(RewardMachine rm) {
 		
 		if(this.explained()) {return true;}
 		

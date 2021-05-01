@@ -2,7 +2,6 @@ package experiments;
 
 import java.io.IOException;
 
-import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 
 /**
@@ -14,6 +13,6 @@ import exceptions.PreconditionViolatedException;
 
 public interface IExperiment {
 
-	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException;
+	public void run() throws IOException, PreconditionViolatedException;
 	
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import agents.Agent;
 import agents.Log;
 import environments.DirectEnvironment;
-import exceptions.BehaviourUndefinedException;
+import environments.IEnvironment;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.Evaluator;
 import rewardmachines.LMRM;
@@ -19,10 +19,10 @@ import rewardmachines.RewardMachine;
 public class InitialEvaluationExperiment implements IExperiment{
 
 	@Override
-	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
+	public void run() throws IOException, PreconditionViolatedException {
 		
 		// Number of runs for each setting
-		int nRuns = 10;
+		int nRuns = 6;
 		
 		// Parameters for the test of increasing states
 		int states_maxStates = 10;
@@ -91,20 +91,20 @@ public class InitialEvaluationExperiment implements IExperiment{
 	}
 
 	
-	public String individualExperiment(int states, int nPropositions, int maxReward) throws IOException, PreconditionViolatedException, BehaviourUndefinedException{
+	public String individualExperiment(int states, int nPropositions, int maxReward) throws IOException, PreconditionViolatedException{
 		
 		MRM task = new MRM(states, nPropositions, maxReward);
-		DirectEnvironment e = new DirectEnvironment(task);
-				
+		IEnvironment e = new DirectEnvironment(task, nPropositions);
+		System.out.println(task.toString());		
 		
 		// Set up logicalAgent
 		RewardMachine emptyLMRM = new LMRM();
-		Agent logicalAgent = new Agent(emptyLMRM, e, nPropositions);
+		Agent logicalAgent = new Agent(emptyLMRM, e, nPropositions, e.getActions());
 		logicalAgent.setCutOff(states+1);
 		
 		// Set up standardAgent
 		RewardMachine emptyMRM = new MRM();
-		Agent standardAgent = new Agent(emptyMRM, e, nPropositions);
+		Agent standardAgent = new Agent(emptyMRM, e, nPropositions, e.getActions());
 		standardAgent.setCutOff(states+1);
 		
 		// Gather initial data by one of the agents

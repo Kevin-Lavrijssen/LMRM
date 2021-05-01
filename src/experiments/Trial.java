@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import agents.Agent;
 import agents.Log;
 import environments.DirectEnvironment;
-import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.RewardMachine;
 import rewardmachines.Evaluator;
@@ -35,21 +34,21 @@ public class Trial implements IExperiment{
 		//String fileLocation = "C:\\Users\\Kevin\\eclipse-workspace\\LogicalMealyRewardMachines\\testcases\\tc1\\MRM.csv";
 		task = new MRM(nStates, nPropositions, maxReward);
 		System.out.println(task.toString());
-		e = new DirectEnvironment(task);
+		e = new DirectEnvironment(task, nPropositions);
 				
 		
 		// Set up logicalAgent
 		RewardMachine emptyLMRM = new LMRM();
-		logicalAgent = new Agent(emptyLMRM, e, nPropositions);
+		logicalAgent = new Agent(emptyLMRM, e, nPropositions, e.getActions());
 		
 		// Set up standardAgent
 		RewardMachine emptyMRM = new MRM();
-		standardAgent = new Agent(emptyMRM, e, nPropositions);
+		standardAgent = new Agent(emptyMRM, e, nPropositions, e.getActions());
 		
 	}
 	
 	@Override
-	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
+	public void run() throws IOException, PreconditionViolatedException {
 		
 		// Gather initial data by one of the agents
 		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(1000, 20);

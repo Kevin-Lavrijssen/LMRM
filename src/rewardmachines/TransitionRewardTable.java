@@ -3,7 +3,6 @@ package rewardmachines;
 import java.util.ArrayList;
 import java.util.Random;
 
-import exceptions.BehaviourUndefinedException;
 
 
 class TransitionRewardTable {
@@ -32,11 +31,11 @@ class TransitionRewardTable {
 	 * 
 	 */
 	
-	ITableEntry get(int source, Observation o) throws BehaviourUndefinedException {
+	ITableEntry get(int source, Observation o) {
 		for(ITableEntry entry : table) {
 			if(entry.evaluate(source, o)) {return entry;}
 		}
-		throw new BehaviourUndefinedException("The state/observation pair is not included in the table");
+		return null;
 	}
 	
 	/**

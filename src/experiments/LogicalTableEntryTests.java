@@ -2,7 +2,6 @@ package experiments;
 
 import java.io.IOException;
 
-import exceptions.BehaviourUndefinedException;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.LogicalTableEntry;
 import rewardmachines.Observation;
@@ -10,7 +9,7 @@ import rewardmachines.Observation;
 public class LogicalTableEntryTests implements IExperiment{
 
 	@Override
-	public void run() throws IOException, BehaviourUndefinedException, PreconditionViolatedException {
+	public void run() throws IOException, PreconditionViolatedException {
 		Observation o1 = new Observation("01");
 		LogicalTableEntry entry = new LogicalTableEntry(1, o1, 1, 1);
 		

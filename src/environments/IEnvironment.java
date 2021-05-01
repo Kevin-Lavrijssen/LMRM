@@ -1,11 +1,10 @@
 package environments;
 
 import agents.Log;
-import exceptions.BehaviourUndefinedException;
 
 public interface IEnvironment {
 
-	public Log execute(String action) throws BehaviourUndefinedException;
+	public Log execute(String action);
 	
 	public void reset();
 	
