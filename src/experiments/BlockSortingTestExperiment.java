@@ -17,7 +17,7 @@ public class BlockSortingTestExperiment implements IExperiment{
 		int ySize = 3;
 		BlockSortingEnvironment b = new BlockSortingEnvironment(nTypes, nBinsPerType, nSourcesPerType, nondeterminism, xSize, ySize);
 		Agent agent = new Agent(new LMRM(), b, b.getNumberOfPropositions(), b.getActions());
-		agent.constructAutomaton(agent.explore(4000, 8));
+		agent.constructAutomaton(agent.explore(10000, 25));
 	}
 	
 	

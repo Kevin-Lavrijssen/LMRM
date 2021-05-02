@@ -15,12 +15,22 @@ public class BlockSortingRewardFunction implements IRewardFunction {
 	
 	@Override
 	public int execute(Observation o) {
+		// Null observation, nothing happened
 		if(o.toInteger()==0) {return 0;}
+		
+		
+		
 		for (int i=0; i<nTypes;i++) {
-			if(typesCarrying[i]==1 && o.toString().charAt(i+nTypes)==1) {typesCarrying[i]=0; return 1;}
-			if(typesCarrying[i]==0 && o.toString().charAt(i)==1) {typesCarrying[i] = 1; return 0;}
+			if(typesCarrying[i]==1 && o.toString().charAt(i)=='1') {typesCarrying[i]=0; return 1;}
+			if(typesCarrying[i]==0 && o.toString().charAt(i+nTypes)=='1') {typesCarrying[i] = 1; return 0;}
 		}
 		return 0;
+	}
+
+	public void reset() {
+		for (int i=0; i<typesCarrying.length; i++) {
+			typesCarrying[i]=0;
+		}
 	}
 
 	

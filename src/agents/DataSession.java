@@ -58,18 +58,6 @@ public class DataSession {
 		for (Trace trace:data) {
 			if(!trace.isConsistent(rm)) {return false;}
 		}
-		/*
-		// Pairwise consistency check
-		for(int trace1=0;trace1<data.size()-1;trace1++) {			
-			Trace t1 = data.get(trace1);
-			for (int trace2=trace1+1; trace2<data.size();trace2++) {
-				Trace t2 = data.get(trace2);	
-				if(!consistent(t1,t2,rm)) {return false;}
-			}
-		}
-		
-		return true;
-		*/
 		
 		for (ConsistencyChecker checker:checkers) {
 			checker.setRM(rm);
@@ -94,10 +82,15 @@ public class DataSession {
 			}
 		}
 		
-		return checkers[0].isConsistent() && checkers[1].isConsistent()&& checkers[2].isConsistent()&& checkers[3].isConsistent();
+		return checkersConsistent();
 		
-		
-		
+	}
+
+	private boolean checkersConsistent() {
+		for(ConsistencyChecker c:checkers) {
+			if(!c.isConsistent()) {return false;}
+		}
+		return true;
 	}
 
 	private boolean consistent(Trace t1, Trace t2, RewardMachine rm) throws PreconditionViolatedException {

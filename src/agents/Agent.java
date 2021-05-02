@@ -38,9 +38,7 @@ public class Agent {
 		ArrayList<ArrayList<Log>> batch = new ArrayList<ArrayList<Log>>();
 		
 		for (int iTrace = 0; iTrace<nTraces; iTrace++) {
-			
-			int maxIntValue = (int) Math.pow(2, nPropositions);
-			
+			//System.out.println("Gathering new trace:");
 			// Create a new empty trace
 			ArrayList<Log> newTrace = new ArrayList<Log>();
 			
@@ -50,7 +48,6 @@ public class Agent {
 			for (int iStep = 0; iStep<nSteps; iStep++) {
 				
 				// Execute  a step
-				Observation o = new Observation(random.nextInt(maxIntValue), nPropositions);
 				Log l = e.execute(actions[random.nextInt(maxActionIndex)]);
 				
 				// Append the log to the trace

@@ -15,8 +15,11 @@ public class Main {
 		//LogicalTableEntryTests ltet = new LogicalTableEntryTests();
 		//ltet.run();
 		
-		InitialEvaluationExperiment e =  new InitialEvaluationExperiment();
-		e.run();
+		//InitialEvaluationExperiment e =  new InitialEvaluationExperiment();
+		//e.run();
+		
+		BlockSortingTestExperiment bE = new BlockSortingTestExperiment();
+		bE.run();
 		
 	 }
 	

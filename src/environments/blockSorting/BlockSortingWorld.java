@@ -28,7 +28,7 @@ public class BlockSortingWorld implements IWorld{
 				while(true) {
 					int x = r.nextInt(xSize);
 					int y = r.nextInt(ySize);
-					if(tileTypes[x][y]!=0) {tileTypes[x][y] = i; break;}
+					if(tileTypes[x][y]==0) {tileTypes[x][y] = i; break;}
 				}
 			}
 			setBins++;
@@ -40,7 +40,7 @@ public class BlockSortingWorld implements IWorld{
 				while(true) {
 					int x = r.nextInt(xSize);
 					int y = r.nextInt(ySize);
-					if(tileTypes[x][y]!=0) {tileTypes[x][y] = -i; break;}
+					if(tileTypes[x][y]==0) {tileTypes[x][y] = -i; break;}
 				}
 			}
 			setSources++;

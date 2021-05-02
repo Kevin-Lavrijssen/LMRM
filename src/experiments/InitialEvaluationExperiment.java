@@ -22,7 +22,7 @@ public class InitialEvaluationExperiment implements IExperiment{
 	public void run() throws IOException, PreconditionViolatedException {
 		
 		// Number of runs for each setting
-		int nRuns = 6;
+		int nRuns = 5;
 		
 		// Parameters for the test of increasing states
 		int states_maxStates = 10;
@@ -108,7 +108,7 @@ public class InitialEvaluationExperiment implements IExperiment{
 		standardAgent.setCutOff(states+1);
 		
 		// Gather initial data by one of the agents
-		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(4000, 8);
+		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(2000, 8);
 				
 		// Build the reward machines
 		long startTimeStandard = System.nanoTime();

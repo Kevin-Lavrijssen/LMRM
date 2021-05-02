@@ -26,6 +26,7 @@ public class BlockSortingEnvironment implements IEnvironment{
 		int[] newState = world.execute(action);
 		Observation observation = labeling.label(action, newState);
 		int reward = rewardFunction.execute(observation);
+		//System.out.println("Action: "+action+", Observation: "+observation.toString()+", Reward: "+reward);
 		return new Log(observation, reward);
 				
 	}
@@ -33,6 +34,7 @@ public class BlockSortingEnvironment implements IEnvironment{
 	@Override
 	public void reset() {
 		world.reset();
+		rewardFunction.reset();
 	}
 
 	@Override
