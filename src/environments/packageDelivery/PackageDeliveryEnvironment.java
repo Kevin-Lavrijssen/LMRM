@@ -1,36 +1,38 @@
-package environments.blockSorting;
+package environments.packageDelivery;
 
 import agents.Log;
 import environments.IEnvironment;
+import environments.ILabelingFunction;
+import environments.IRewardFunction;
+import environments.blockSorting.BlockSortingLabeling;
+import environments.blockSorting.BlockSortingRewardFunction;
+import environments.blockSorting.BlockSortingWorld;
 import rewardmachines.Observation;
-import rewardmachines.RewardMachine;
 
-public class BlockSortingEnvironment implements IEnvironment{
+public class PackageDeliveryEnvironment implements IEnvironment{
 
-	public BlockSortingEnvironment(int nTypes, int nBinsPerType, int nSourcesPerType, double nondeterminism, int xSize, int ySize) {
+	public PackageDeliveryEnvironment(double nondeterminism, IRewardFunction rf, ILabelingFunction lf) {
 		
 		actions = new String[] {"PickUp", "Drop", "North", "East", "South", "West"};
-		world = new BlockSortingWorld(nTypes, nBinsPerType, nSourcesPerType, nondeterminism, xSize, ySize, actions);
-		labeling = new BlockSortingLabeling(nTypes);
-		rewardFunction = new BlockSortingRewardFunction(nTypes);
+		world = new PackageDeliveryWorld(actions);
+		labeling = lf;
+		rewardFunction = rf;
+		
 	}
 	
 	private String[] actions;
-	private BlockSortingWorld world;
-	private BlockSortingLabeling labeling;
-	private BlockSortingRewardFunction rewardFunction;
-	
+	private PackageDeliveryWorld world;
+	private ILabelingFunction labeling;
+	private IRewardFunction rewardFunction;
 	
 	@Override
 	public Log execute(String action) {
 		int[] newState = world.execute(action);
 		Observation observation = labeling.label(action, newState);
 		int reward = rewardFunction.execute(observation);
-		//System.out.println("Action: "+action+", Observation: "+observation.toString()+", Reward: "+reward);
 		return new Log(action, observation, reward);
-				
 	}
-	
+
 	@Override
 	public void reset() {
 		world.reset();
@@ -46,5 +48,5 @@ public class BlockSortingEnvironment implements IEnvironment{
 	public int getNumberOfPropositions() {
 		return labeling.getNumberOfPropositions();
 	}
-	
+
 }

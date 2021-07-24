@@ -15,4 +15,6 @@ public interface IExperiment {
 
 	public void run() throws IOException, PreconditionViolatedException;
 	
+	public void reportResults(String result);
+	
 }

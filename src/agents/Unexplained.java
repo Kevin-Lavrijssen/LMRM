@@ -6,10 +6,12 @@ public class Unexplained {
 
 	private int state;
 	private Log log;
+	private String[] prefix;
 	
-	public Unexplained(int state, Log log) {
+	public Unexplained(int state, Log log, String[] prefix) {
 		this.state = state;
 		this.log = log;
+		this.prefix=prefix;
 	}
 	
 	public int getState() {
@@ -22,6 +24,10 @@ public class Unexplained {
 	
 	public Observation getObservation() {
 		return log.getObservation();
+	}
+	
+	public String[] getPrefix() {
+		return prefix;
 	}
 	
 }

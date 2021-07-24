@@ -8,11 +8,19 @@ public class Trace {
 
 	private ArrayList<Log> trace;
 	
+	public Trace(ArrayList<Log> trace) {
+		this.trace=trace;
+		currentState=0;
+		index=0;
+	}
+	
 	public int[] getRemainder(RewardMachine rm) throws PreconditionViolatedException{
 		
 		//rm.setState(currentState);
 		int remainderState = currentState;
 		int remainderIndex = index;
+		
+		
 		
 		/*
 		while(remainderIndex<trace.size()) {
@@ -57,18 +65,21 @@ public class Trace {
 	
 	
 	
-	public Trace(ArrayList<Log> trace) {
-		this.trace=trace;
-		currentState=0;
-		index=0;
-	}
+
 
 	public boolean explained() {
 		return currentState==-1 && index==-1;
 	}
 
 	public Unexplained getNextUnexplained() {
-		return new Unexplained(currentState, trace.get(index));
+		
+		String[] prefix = new String[index+1];
+		
+		for(int i=0; i<=index; i++) {
+			prefix[i]=trace.get(i).getAction();
+		}
+		
+		return new Unexplained(currentState, trace.get(index), prefix);
 	}
 
 	public void explain(RewardMachine rm) throws PreconditionViolatedException {
@@ -129,6 +140,16 @@ public class Trace {
 		}
 		
 		return true;
+	}
+
+	public String[] getExplainedPrefix() throws PreconditionViolatedException {
+		if(index==0) {throw new PreconditionViolatedException("Index = 0");}
+		String[] prefix = new String[index];
+		for(int i=0; i<index; i++) {
+			prefix[i]=trace.get(i).getAction();
+		}
+		return prefix;
+		
 	}
 	
 }

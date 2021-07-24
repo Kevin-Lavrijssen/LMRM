@@ -1,7 +1,7 @@
 package experiments;
 import java.io.IOException;
 import java.util.ArrayList;
-import agents.Agent;
+import agents.Agent_Standard;
 import agents.Log;
 import environments.DirectEnvironment;
 import exceptions.PreconditionViolatedException;
@@ -13,8 +13,8 @@ import rewardmachines.MRM;
 public class Trial implements IExperiment{
 	
 	DirectEnvironment e;
-	Agent logicalAgent;
-	Agent standardAgent;
+	Agent_Standard logicalAgent;
+	Agent_Standard standardAgent;
 	MRM task;
 	int nPropositions;
 	
@@ -39,11 +39,11 @@ public class Trial implements IExperiment{
 		
 		// Set up logicalAgent
 		RewardMachine emptyLMRM = new LMRM();
-		logicalAgent = new Agent(emptyLMRM, e, nPropositions, e.getActions());
+		logicalAgent = new Agent_Standard(emptyLMRM, e, nPropositions, e.getActions());
 		
 		// Set up standardAgent
 		RewardMachine emptyMRM = new MRM();
-		standardAgent = new Agent(emptyMRM, e, nPropositions, e.getActions());
+		standardAgent = new Agent_Standard(emptyMRM, e, nPropositions, e.getActions());
 		
 	}
 	
@@ -79,6 +79,12 @@ public class Trial implements IExperiment{
 		System.out.println("Mispredictions: "+levaluator.getMispredictions());
 		System.out.println("Improvement in number of states: "+levaluator.getStateImprovement());
 		System.out.println("Improvement in number of transitions: "+levaluator.getTransitionImprovement());
+		
+	}
+
+	@Override
+	public void reportResults(String result) {
+		// TODO Auto-generated method stub
 		
 	}
 

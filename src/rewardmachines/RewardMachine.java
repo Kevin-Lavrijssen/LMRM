@@ -218,4 +218,6 @@ public abstract class RewardMachine {
 		return this.pushedSource +","+this.pushedObservation.toString()+","+this.pushedDestination+","+this.pushedReward+"\n";
 	}
 
+	public abstract String getType();
+
 }

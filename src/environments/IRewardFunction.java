@@ -6,4 +6,6 @@ public interface IRewardFunction {
 
 	public int execute(Observation o);
 	
+	public void reset();
+	
 }

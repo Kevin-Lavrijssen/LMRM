@@ -18,8 +18,17 @@ public class Main {
 		//InitialEvaluationExperiment e =  new InitialEvaluationExperiment();
 		//e.run();
 		
-		BlockSortingTestExperiment bE = new BlockSortingTestExperiment();
-		bE.run();
+		//BlockSortingTestExperiment bE = new BlockSortingTestExperiment();
+		//bE.run();
+		
+		//DivideAndConquerTestExperiment e =  new DivideAndConquerTestExperiment();
+		//e.run();
+		
+		//EvaluationPassiveStateSplittingExperiment e = new EvaluationPassiveStateSplittingExperiment();
+		//e.run();
+		
+		PackageDeliveryExperiment e = new PackageDeliveryExperiment();
+		e.run();
 		
 	 }
 	

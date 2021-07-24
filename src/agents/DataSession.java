@@ -142,5 +142,16 @@ public class DataSession {
 		return string;
 	}
 
+	public String[] getPathToBorder() throws PreconditionViolatedException {
+		
+		for(Trace trace:data) {
+			if(!trace.explained()) {
+				return trace.getExplainedPrefix();
+			}
+		}
+		
+		return null;
+	}
+
 	
 }

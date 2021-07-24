@@ -1,4 +1,5 @@
 package experiments;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,82 +17,61 @@ import rewardmachines.LMRM;
 import rewardmachines.MRM;
 import rewardmachines.RewardMachine;
 
-public class InitialEvaluationExperiment implements IExperiment{
+public class EvaluationPassiveStateSplittingExperiment implements IExperiment{
 
 	@Override
 	public void run() throws IOException, PreconditionViolatedException {
 		
-		// Number of runs for each setting
+		// Configuration
 		int nRuns = 5;
+		int maxStates = 8;
+		int maxPropositions = 6;
 		
-		// Parameters for the test of increasing states
-		int states_maxStates = 10;
-		int states_nPropositions = 2;
-		
-		// Parameters for the test of increasing number of propositions
-		int propositions_maxPropositions = 11;
-		int propositions_nStates = 2;
-	
 		// CSV Header
 		String header = "#States_target,#Propositions,MAX_Reward,ElapsedTime_Nano,dEuclidean,dManhattan,#Mispredictions,relativeStateImprovement,relativeTransitionImprovement,absoluteStateImprovement,absoluteTransitionImprovement, size \n";
 		
-		/*
-		// Create file to store results
-		File stateExperiment = new File("BasicStateExperiment.csv");
-		stateExperiment.createNewFile(); // if file already exists will do nothing 
-		FileOutputStream resultsStateExperiment = new FileOutputStream(stateExperiment, false); 
-		BufferedWriter bw1 = new BufferedWriter(new OutputStreamWriter(resultsStateExperiment));
-		bw1.write(header);
-		// Run for the different states
-		for (int run=0; run<nRuns;run++) {
-			for(int states = 2; states<states_maxStates; states++) {
-				String results = individualExperiment(states, states_nPropositions, 2);
-				bw1.write(results);
-			}
-		}
 		
-		bw1.flush();
-		bw1.close();
-		
-		
-		// Create file to store results
-		File propExperiment = new File("BasicPropositionExperiment_1.csv");
-		propExperiment.createNewFile(); // if file already exists will do nothing 
-		FileOutputStream resultsPropExperiment = new FileOutputStream(propExperiment, false); 
-		BufferedWriter bw2 = new BufferedWriter(new OutputStreamWriter(resultsPropExperiment));
-		bw2.write(header);
-		// Run for the different states
-		for (int run=0; run<nRuns;run++) {
-			for(int nPropositions = 1; nPropositions<6; nPropositions++) {
-				String results = individualExperiment(propositions_nStates, nPropositions, 2);
-				bw2.write(results);
-			}
-		}
-		
-		bw2.flush();
-		bw2.close();
-		
-		*/
-		
-		// Create file to store results
-				File propExperiment2 = new File("BasicPropositionExperiment_2.csv");
-				propExperiment2.createNewFile(); // if file already exists will do nothing 
-				FileOutputStream resultsPropExperiment2 = new FileOutputStream(propExperiment2, false); 
-				BufferedWriter bw3 = new BufferedWriter(new OutputStreamWriter(resultsPropExperiment2));
-				bw3.write(header);
-				// Run for the different states
-				for (int run=0; run<nRuns;run++) {
-					String results = individualExperiment(propositions_nStates, 5, 2);
-					bw3.write(results);
-				}
+		// Outer two loops traverse the grid of configurations
+		for (int nStates = 5; nStates <= maxStates; nStates++) {
+			for(int nPropositions = 3; nPropositions <= maxPropositions; nPropositions++ ) {
 				
-				bw3.flush();
-				bw3.close();
+				// Create file to store configuration results
+				String fileName = "EvaluationPassiveStateSplitting_" + nStates +"_" + nPropositions + ".csv" ;
+				File experiment = new File(fileName);
+				experiment.createNewFile(); // if file already exists will do nothing 
+				FileOutputStream resultsExperiment = new FileOutputStream(experiment, false); 
+				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(resultsExperiment));
+				bw.write(header);
+				
+				// Run the experiment for the required number of runs
+				for (int n = 0; n<nRuns; n++) {
+					
+					long startExecutionTime = System.nanoTime();
+					String results = individualExperiment(nStates, nPropositions, 2);
+					bw.write(results);
+					long elapsedExecutionTime = System.nanoTime()-startExecutionTime;
+					
+					System.out.println("Experiment Completed:");
+					System.out.println("Run: "+n);
+					System.out.println("States: "+nStates);
+					System.out.println("Propositions: "+nPropositions);
+					System.out.println("Time to complete: "+elapsedExecutionTime);
+					
+				}
+				bw.flush();
+				bw.close();
+			}
+		}
 		
 	}
 
-	
-	public String individualExperiment(int states, int nPropositions, int maxReward) throws IOException, PreconditionViolatedException{
+	@Override
+	public void reportResults(String result) {
+		// TODO Auto-generated method stub
+		
+	}
+
+public String individualExperiment(int states, int nPropositions, int maxReward) throws IOException, PreconditionViolatedException{
 		
 		MRM task = new MRM(states, nPropositions, maxReward);
 		IEnvironment e = new DirectEnvironment(task, nPropositions);
@@ -108,7 +88,7 @@ public class InitialEvaluationExperiment implements IExperiment{
 		standardAgent.setCutOff(states+1);
 		
 		// Gather initial data by one of the agents
-		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(2000, 8);
+		ArrayList<ArrayList<Log>> trainingData = standardAgent.explore(15000, 50);
 				
 		// Build the reward machines
 		long startTimeStandard = System.nanoTime();
@@ -188,13 +168,6 @@ public class InitialEvaluationExperiment implements IExperiment{
 		standardResult += "\n";
 		
 		return logicalResult + standardResult;
-	}
-
-
-	@Override
-	public void reportResults(String result) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

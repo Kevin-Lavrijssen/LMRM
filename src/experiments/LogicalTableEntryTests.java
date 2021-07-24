@@ -36,5 +36,11 @@ public class LogicalTableEntryTests implements IExperiment{
 		
 	}
 
+	@Override
+	public void reportResults(String result) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

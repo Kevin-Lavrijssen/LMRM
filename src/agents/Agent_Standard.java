@@ -8,7 +8,7 @@ import environments.IEnvironment;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.*;
 
-public class Agent {
+public class Agent_Standard {
 
 	RewardMachine taskModel;
 	IEnvironment e;
@@ -19,7 +19,7 @@ public class Agent {
 	
 	DataSession trainingSet;
 	
-	public Agent(RewardMachine emptyModel, IEnvironment e, int nPropositions, String[] actions) {
+	public Agent_Standard(RewardMachine emptyModel, IEnvironment e, int nPropositions, String[] actions) {
 		this.taskModel=emptyModel;
 		this.e = e;
 		this.nPropositions = nPropositions;

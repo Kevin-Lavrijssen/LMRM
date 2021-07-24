@@ -28,10 +28,10 @@ public class DirectEnvironment implements IEnvironment{
 	}
 	
 	@Override
-	public Log execute(String o) {
-		Observation observation = map.get(o);
+	public Log execute(String a) {
+		Observation observation = map.get(a);
 		int reward = task.execute(observation);
-		return new Log(observation, reward);
+		return new Log(a,observation, reward);
 	}
 	
 	@Override

@@ -88,5 +88,10 @@ public class MRM extends RewardMachine{
 		System.out.print(entry.toString());
 		clearTemporaryTransition();
 	}
+
+	@Override
+	public String getType() {
+		return "MRM";
+	}
 	
 }

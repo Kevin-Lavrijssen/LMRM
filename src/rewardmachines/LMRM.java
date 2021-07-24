@@ -39,4 +39,9 @@ public class LMRM extends RewardMachine{
 		clearTemporaryTransition();
 		System.out.println(entry.toString());
 	}
+
+	@Override
+	public String getType() {
+		return "LMRM";
+	}
 }
