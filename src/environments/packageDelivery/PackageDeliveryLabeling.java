@@ -74,7 +74,7 @@ public class PackageDeliveryLabeling implements ILabelingFunction {
 		
 		// Drop products at delivery point state[i]
 		if(state[0]==5 && action.equals("Drop")) {
-			return new Observation((int) Math.pow(2, 8+state[1]), 15);
+			return new Observation((int) Math.pow(2, 15-state[1]), 15);
 		}
 		
 		// Default observation (no changes)

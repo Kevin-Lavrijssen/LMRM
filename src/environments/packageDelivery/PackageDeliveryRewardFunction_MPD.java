@@ -50,12 +50,12 @@ public class PackageDeliveryRewardFunction_MPD implements IRewardFunction {
 		if(o.toInteger()==(int)Math.pow(2, 0)) {inWater = true; return -1;}
 			
 		// Deliver products to the matched delivery point
-		if(P1==true && o.toInteger()==(int) Math.pow(2, 9)) {P1=false; return 1;}
-		if(P2==true && o.toInteger()==(int) Math.pow(2,10)) {P2=false; return 1;}
-		if(P3==true && o.toInteger()==(int) Math.pow(2,11)) {P3=false; return 1;}
-		if(P4==true && o.toInteger()==(int) Math.pow(2,12)) {P4=false; return 1;}
-		if(P5==true && o.toInteger()==(int) Math.pow(2,13)) {P5=false; return 1;}
-		if(P6==true && o.toInteger()==(int) Math.pow(2,14)) {P6=false; return 1;}
+		if(P1==true && o.toString().charAt(5)=='1') {P1=false; return 1;}
+		if(P2==true && o.toString().charAt(4)=='1') {P2=false; return 1;}
+		if(P3==true && o.toString().charAt(3)=='1') {P3=false; return 1;}
+		if(P4==true && o.toString().charAt(2)=='1') {P4=false; return 1;}
+		if(P5==true && o.toString().charAt(1)=='1') {P5=false; return 1;}
+		if(P6==true && o.toString().charAt(0)=='1') {P6=false; return 1;}
 		
 		
 		

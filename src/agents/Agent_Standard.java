@@ -31,9 +31,9 @@ public class Agent_Standard {
 	
 	// Debugged -> OK!
 	
-	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps) {
+	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps, int run) {
 		
-		Random random = new Random();
+		Random random = new Random(run);
 		int maxActionIndex = actions.length;
 		ArrayList<ArrayList<Log>> batch = new ArrayList<ArrayList<Log>>();
 		

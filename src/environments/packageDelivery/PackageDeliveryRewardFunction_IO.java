@@ -44,24 +44,17 @@ public class PackageDeliveryRewardFunction_IO implements IRewardFunction {
 			if(o.toString().charAt(nNoise+ 6)=='1'){P6=true;}
 		}
 		
-		// Bridge 1 constraint
-		if(o.toInteger()==2 && P1==true) {return 0;}
-		if(o.toInteger()==2 && P1==false) {inWater=true; return -1;}
-
-		// Bridge 2 constraint
-		if(o.toInteger()==4 && (P5==true || P6==true)) {return 0;}
-		if(o.toInteger()==4 && P5==false && P6==false) {inWater=true; return -1;}
-		
+		 
 		// Negative reward if in the water
-		if(o.toInteger()==(int)Math.pow(2, 0)) {inWater = true; return -1;}
+		if(o.toString().charAt(nNoise+14)=='1') {inWater = true; return -1;}
 			
 		// Deliver products to the matched delivery point
-		if(P1==true && o.toInteger()==(int) Math.pow(2, 9)) {P1=false; return 1;}
-		if(P2==true && o.toInteger()==(int) Math.pow(2,10)) {P2=false; return 1;}
-		if(P3==true && o.toInteger()==(int) Math.pow(2,11)) {P3=false; return 1;}
-		if(P4==true && o.toInteger()==(int) Math.pow(2,12)) {P4=false; return 1;}
-		if(P5==true && o.toInteger()==(int) Math.pow(2,13)) {P5=false; return 1;}
-		if(P6==true && o.toInteger()==(int) Math.pow(2,14)) {P6=false; return 1;}
+		if(isCarryingProducts() && o.toString().charAt(nNoise+5)=='1') {dropProducts(); return 1;}
+		if(isCarryingProducts() && o.toString().charAt(nNoise+4)=='1') {dropProducts(); return 1;}
+		if(isCarryingProducts() && o.toString().charAt(nNoise+3)=='1') {dropProducts(); return 1;}
+		if(isCarryingProducts() && o.toString().charAt(nNoise+2)=='1') {dropProducts(); return 1;}
+		if(isCarryingProducts() && o.toString().charAt(nNoise+1)=='1') {dropProducts(); return 1;}
+		if(isCarryingProducts() && o.toString().charAt(nNoise+0)=='1') {dropProducts(); return 1;}
 		
 		
 		
@@ -83,5 +76,14 @@ public class PackageDeliveryRewardFunction_IO implements IRewardFunction {
 	
 	private boolean isCarryingProducts() {
 		return P1 || P2 || P3 || P4 || P5 || P6;
+	}
+	
+	private void dropProducts() {
+		P1 = false;
+		P2 = false;
+		P3 = false;
+		P4 = false;
+		P5 = false;
+		P6 = false;
 	}
 }

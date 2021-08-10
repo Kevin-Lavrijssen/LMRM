@@ -27,8 +27,15 @@ public class Main {
 		//EvaluationPassiveStateSplittingExperiment e = new EvaluationPassiveStateSplittingExperiment();
 		//e.run();
 		
+		
+		//PackageDeliveryTests pdTests = new PackageDeliveryTests();
+		//pdTests.run();
+		
 		PackageDeliveryExperiment e = new PackageDeliveryExperiment();
 		e.run();
+		
+		//ActivePassiveExperiment e = new ActivePassiveExperiment();
+		//e.run();
 		
 	 }
 	

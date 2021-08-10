@@ -21,7 +21,7 @@ public class NoiseWrapperLabelingFunction implements ILabelingFunction{
 		Observation o = labeling.label(action, state);
 		int noiseValue = r.nextInt((int) Math.pow(2, noisePropositions));
 		Observation n = new Observation(noiseValue, noisePropositions);
-		return new Observation(n.toString()+o.toString() );
+		return new Observation(n.toString()+o.toString());
 	}
 
 	@Override
