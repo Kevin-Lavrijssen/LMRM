@@ -14,6 +14,14 @@ public class PackageDeliveryWorld implements IWorld{
 		maxY = 6;
 	}
 	
+	public PackageDeliveryWorld(String[] actions, int x, int y){
+		this.actions = actions;
+		currentX = 2;
+		currentY = 1;
+		maxX = x;
+		maxY = y;
+	}
+	
 	int currentX;
 	int currentY;
 	

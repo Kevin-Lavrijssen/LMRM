@@ -38,13 +38,10 @@ public class AgentDivideAndConquerV2 {
 		
 			String[] prefix = borders.get(0);
 
-			//System.out.println("About to pop next border: "+borders.size());
 			borders.remove(prefix);
-			//System.out.println("Border popped: "+borders.size());
 			
 			for(String a1:actions) {
 				
-				//System.out.println("Just expanding border: "+borders.size());
 				
 				// Sample training data for the new part
 				if(suffixLength==1) {trainingSet = new DataSession(sample(prefix, a1));}

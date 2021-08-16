@@ -28,7 +28,7 @@ public class PackageDeliveryExperiment implements IExperiment {
 	@Override
 	public void run() throws IOException, PreconditionViolatedException {
 		
-		long tic = System.nanoTime();
+		long start = System.nanoTime();
 		
 		// Environments
 		PackageDeliveryEnvironment spd = new PackageDeliveryEnvironment(0, new PackageDeliveryRewardFunction_SPD(), new PackageDeliveryLabeling());
@@ -226,8 +226,8 @@ public class PackageDeliveryExperiment implements IExperiment {
 		}
 		
 		
-		long toc = System.nanoTime()-tic;
-		System.out.println(toc);
+		long end = System.nanoTime()-start;
+		System.out.println(end);
 	}
 		
 		

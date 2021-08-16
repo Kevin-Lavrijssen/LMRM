@@ -47,7 +47,6 @@ public class Agent_DivideAndConquer {
 			long executionTime = System.nanoTime()-startTime;
 			currentExecutionTime+=executionTime;
 			report();
-			System.out.println("##########################  REPORTED  ##########################");
 			String[] pathToBorder = trainingSet.getPathToBorder();
 			ArrayList<ArrayList<Log>> extension = explore(pathToBorder);
 			trainingSet.add(extension);
@@ -150,7 +149,6 @@ private void expandAutomaton(int statesAdded) throws PreconditionViolatedExcepti
 		
 		int nSteps = 20;
 		
-		//System.out.println("Gathering new trace:");
 		// Create a new empty trace
 		ArrayList<Log> newTrace = new ArrayList<Log>();
 		

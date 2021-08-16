@@ -9,33 +9,16 @@ public class Main {
 
 	public static void main(String[] args) throws IOException, PreconditionViolatedException {
 		 
-		//Trial exp = new Trial();
-		//exp.run();
-		 
-		//LogicalTableEntryTests ltet = new LogicalTableEntryTests();
-		//ltet.run();
-		
-		//InitialEvaluationExperiment e =  new InitialEvaluationExperiment();
-		//e.run();
-		
-		//BlockSortingTestExperiment bE = new BlockSortingTestExperiment();
-		//bE.run();
-		
-		//DivideAndConquerTestExperiment e =  new DivideAndConquerTestExperiment();
-		//e.run();
+		// The experiment of chapter 5
 		
 		//EvaluationPassiveStateSplittingExperiment e = new EvaluationPassiveStateSplittingExperiment();
 		//e.run();
 		
+		// The experiments in chapter 6
 		
-		//PackageDeliveryTests pdTests = new PackageDeliveryTests();
-		//pdTests.run();
-		
-		PackageDeliveryExperiment e = new PackageDeliveryExperiment();
-		e.run();
-		
-		//ActivePassiveExperiment e = new ActivePassiveExperiment();
+		//PackageDeliveryExperiment e = new PackageDeliveryExperiment();
 		//e.run();
+
 		
 	 }
 	

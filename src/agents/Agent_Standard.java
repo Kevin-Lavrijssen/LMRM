@@ -2,8 +2,6 @@ package agents;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-
-import environments.DirectEnvironment;
 import environments.IEnvironment;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.*;
@@ -29,16 +27,20 @@ public class Agent_Standard {
 		trainingSet = new DataSession();
 	}
 	
+	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps){
+		Random r = new Random();
+		return explore(nTraces, nSteps, r.nextInt());
+	} 
+	
 	// Debugged -> OK!
 	
-	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps, int run) {
+	public ArrayList<ArrayList<Log>> explore(int nTraces, int nSteps, int seed) {
 		
-		Random random = new Random(run);
+		Random random = new Random(seed);
 		int maxActionIndex = actions.length;
 		ArrayList<ArrayList<Log>> batch = new ArrayList<ArrayList<Log>>();
 		
 		for (int iTrace = 0; iTrace<nTraces; iTrace++) {
-			//System.out.println("Gathering new trace:");
 			// Create a new empty trace
 			ArrayList<Log> newTrace = new ArrayList<Log>();
 			
@@ -70,10 +72,6 @@ public class Agent_Standard {
 	
 	public void setCutOff(int cutOff) {
 		this.cutOff=cutOff;
-	}
-	
-	private void rollBack() {
-		// TODO Second phase
 	}
 	
 	public RewardMachine getTaskModel() {

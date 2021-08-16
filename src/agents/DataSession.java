@@ -1,8 +1,6 @@
 package agents;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import exceptions.PreconditionViolatedException;
 import rewardmachines.RewardMachine;
 
@@ -93,6 +91,7 @@ public class DataSession {
 		return true;
 	}
 
+	/*
 	private boolean consistent(Trace t1, Trace t2, RewardMachine rm) throws PreconditionViolatedException {
 		if(t1==t2) {throw new PreconditionViolatedException("A trace is always consistent with itself");}
 		if(t1.explained()||t2.explained()) {return true;}
@@ -121,7 +120,7 @@ public class DataSession {
 	
 		return true;
 	
-	}
+	}*/
 
 	public void explain(RewardMachine rm) throws PreconditionViolatedException {
 		for(Trace trace:data) {if(!trace.explained()) {trace.explain(rm);}}

@@ -4,9 +4,6 @@ import agents.Log;
 import environments.IEnvironment;
 import environments.ILabelingFunction;
 import environments.IRewardFunction;
-import environments.blockSorting.BlockSortingLabeling;
-import environments.blockSorting.BlockSortingRewardFunction;
-import environments.blockSorting.BlockSortingWorld;
 import rewardmachines.Observation;
 
 public class PackageDeliveryEnvironment implements IEnvironment{

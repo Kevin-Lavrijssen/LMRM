@@ -3,7 +3,6 @@ package environments.blockSorting;
 import agents.Log;
 import environments.IEnvironment;
 import rewardmachines.Observation;
-import rewardmachines.RewardMachine;
 
 public class BlockSortingEnvironment implements IEnvironment{
 
@@ -26,7 +25,6 @@ public class BlockSortingEnvironment implements IEnvironment{
 		int[] newState = world.execute(action);
 		Observation observation = labeling.label(action, newState);
 		int reward = rewardFunction.execute(observation);
-		//System.out.println("Action: "+action+", Observation: "+observation.toString()+", Reward: "+reward);
 		return new Log(action, observation, reward);
 				
 	}

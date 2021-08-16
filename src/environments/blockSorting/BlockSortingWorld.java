@@ -62,7 +62,7 @@ public class BlockSortingWorld implements IWorld{
 	private int currentY;
 	
 	/**
-	 * Matrix representig tile types
+	 * Matrix representing tile types
 	 * ...
 	 *  1: Block of type 1
 	 *  0: Empty tile

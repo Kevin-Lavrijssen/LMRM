@@ -25,14 +25,14 @@ public class ActivePassiveExperiment implements IExperiment{
 	public void run() throws IOException, PreconditionViolatedException {
 		
 		// Experiment parameters
-		int[] states = new int[] {2, 4, 8};
-		int[] propositions = new int[] {4, 5, 6};
-		int[] traces = new int[] {16,32,64,128,256};
+		int[] states = new int[] {2, 4, 6,8};
+		int[] propositions = new int[] {4};
+		int[] traces = new int[] {8, 16,32,64,128,256, 512};
 		
-		String header = "Algorithm, nStates, nPropositions, Accuracy, ExecutionTime, nTraces \n";
+		String header = "Algorithm, nStates, nPropositions, Accuracy, ExecutionTime, nTraces, size \n";
 		
 		// Loop managing different runs of the experiment
-		for (int run=0; run<1; run++) {
+		for (int run=0; run<5; run++) {
 			
 			// Create file
 			String fileName = "activePassive_"+run+".csv" ;
@@ -59,23 +59,23 @@ public class ActivePassiveExperiment implements IExperiment{
 						
 						// Learn models
 						long startTimePassive = System.nanoTime();
-						passive.constructAutomaton(passive.explore(nTraces, 2*nStates-1));
-						double executionTimePassive = startTimePassive-System.nanoTime()/Math.pow(10, -9);
+						passive.constructAutomaton(passive.explore(nTraces, 2*nStates-1, run));
+						double executionTimePassive = (startTimePassive-System.nanoTime())/Math.pow(10, 9);
 						
 						long startTimeActive = System.nanoTime();
 						active.learnAutomaton(nTraces, 2*nStates-1, nStates*2);
-						double executionTimeActive = startTimeActive-System.nanoTime()/Math.pow(10, -9);
+						double executionTimeActive = (startTimeActive-System.nanoTime())/Math.pow(10, 9);
 						
 						// Evaluate models
 						int nValidationTraces = 10*nStates*(int)Math.pow(2, nPropositions);
-						ArrayList<ArrayList<Log>> validationSet = passive.explore(nValidationTraces, 2*nStates-1);
+						ArrayList<ArrayList<Log>> validationSet = passive.explore(nValidationTraces, 2*nStates-1, 13);
 						
 						double passiveAccuracy = evaluateModel(validationSet, passive.getTaskModel());
 						double activeAccuracy = evaluateModel(validationSet, active.getTaskModel());
 						
 						// Write results
-						String passiveResult = "Passive,"+nStates+","+nPropositions+","+passiveAccuracy+","+executionTimePassive+","+nTraces+"\n";
-						String activeResult = "Active,"+nStates+","+nPropositions+","+activeAccuracy+","+executionTimeActive+","+nTraces+"\n";
+						String passiveResult = "Passive,"+nStates+","+nPropositions+","+passiveAccuracy+","+executionTimePassive+","+nTraces+","+ passive.getTaskModel().getNumberOfStates() +"\n";
+						String activeResult = "Active,"+nStates+","+nPropositions+","+activeAccuracy+","+executionTimeActive+","+nTraces+","+active.getTaskModel().getNumberOfStates()+"\n";
 						
 						bw.write(passiveResult);
 						bw.write(activeResult);
